@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:id="@+id/toolbar"
+            android:background="@color/colorPrimary"
+            android:elevation="4dp"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="top"
+                    android:maxLines="1"
+                    android:paddingLeft="2dp"
+                    android:singleLine="true"
+                    android:textColor="#fafafa"
+                    android:text="Rocket"
+                    android:textSize="20sp" />
+            </FrameLayout>
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.james.rocket.SquareImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView6"
+                android:layout_gravity="center"
+                android:src="@mipmap/tutorialtap"
+                android:scaleType="fitCenter"
+                android:background="#3f51b5" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tap to fly."
+                android:id="@+id/textView13"
+                android:layout_gravity="center_horizontal|bottom"
+                android:textColor="#fafafa"
+                android:textSize="14sp"
+                android:padding="16dp"
+                android:background="#303f9f" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.james.rocket.SquareImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView4"
+                android:layout_gravity="center"
+                android:src="@mipmap/tutorialcrash"
+                android:scaleType="fitCenter"
+                android:background="#2196f3" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Don&apos;t hit the top or the bottom."
+                android:id="@+id/textView11"
+                android:layout_gravity="center_horizontal|bottom"
+                android:textColor="#fafafa"
+                android:textSize="14sp"
+                android:padding="16dp"
+                android:background="#1976d2" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <com.james.rocket.SquareImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView5"
+                android:layout_gravity="center"
+                android:src="@mipmap/tutorialmeteor"
+                android:scaleType="fitCenter"
+                android:background="#15181b" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Don&apos;t get hit by the flying things."
+                android:id="@+id/textView12"
+                android:layout_gravity="right|bottom"
+                android:textColor="#fafafa"
+                android:textSize="14sp"
+                android:padding="16dp"
+                android:background="#000" />
+        </FrameLayout>
+
+        <android.support.v7.widget.CardView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/button"
+            android:foreground="?attr/selectableItemBackground"
+            android:layout_margin="8dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:text="START"
+                android:textColor="#fafafa"
+                android:textAlignment="center"
+                android:padding="8dp" />
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+</ScrollView>

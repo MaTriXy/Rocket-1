@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Rocket</string>
+
+    <string name="sign_in_failure">Sign-in failed</string>
+
+    <string-array name="credits">
+        <item>Brice Seibert - designed the easy mode and… something secret ;)</item>
+        <item>Vukašin Anđelković - designed the extreme mode and the app icon</item>
+        <item>Radek Bledowski - designed the medium mode</item>
+        <item>Corbin Crutchley - did… more secret things :)</item>
+        <item>Anas Khan - inspiration for the rocket</item>
+        <item>Justin Kruit - inspired the color scheme</item>
+    </string-array>
+</resources>
