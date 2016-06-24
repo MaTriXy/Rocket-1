@@ -17,7 +17,7 @@
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="Rocket" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,16 +25,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Flappy"
+        <activity android:name=".activities.Flappy"
             android:hardwareAccelerated="true" />
 
-        <activity android:name=".SpecialLevel"
+        <activity android:name=".activities.SpecialLevel"
             android:hardwareAccelerated="true"/>
 
-        <activity android:name=".Progress" />
-        <activity android:name=".Options" />
+        <activity android:name=".activities.Progress" />
+        <activity android:name=".activities.Options" />
 
-        <activity android:name=".TutorialActivity" android:theme="@style/AppTheme" />
+        <activity android:name=".activities.TutorialActivity" android:theme="@style/AppTheme" />
 
     </application>
 

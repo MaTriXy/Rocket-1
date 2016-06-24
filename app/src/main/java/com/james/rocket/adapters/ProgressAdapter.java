@@ -1,10 +1,12 @@
-package com.james.rocket;
+package com.james.rocket.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.james.rocket.fragments.ProgressFragment;
 
 public class ProgressAdapter extends FragmentPagerAdapter {
 

@@ -7,21 +7,21 @@
     android:layout_height="match_parent"
     android:id="@+id/root">
 
-    <com.james.rocket.BgImageView
+    <com.james.rocket.views.BgImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/bg"
         android:src="@mipmap/bg"
         android:background="#000"/>
 
-    <com.james.rocket.SquareImageView
+    <com.james.rocket.views.SquareImageView
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:src="@mipmap/rocket"
         android:layout_gravity="center"/>
 
-    <com.james.rocket.SquareImageView
+    <com.james.rocket.views.SquareImageView
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/antiflappy"

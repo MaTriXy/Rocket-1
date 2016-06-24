@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <com.james.rocket.SquareImageView
+            <com.james.rocket.views.SquareImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView6"
@@ -67,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.james.rocket.SquareImageView
+            <com.james.rocket.views.SquareImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView4"
@@ -92,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <com.james.rocket.SquareImageView
+            <com.james.rocket.views.SquareImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView5"

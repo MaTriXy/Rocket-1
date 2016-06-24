@@ -1,10 +1,12 @@
-package com.james.rocket;
+package com.james.rocket.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import com.james.rocket.R;
 
 public class TutorialActivity extends AppCompatActivity {
 

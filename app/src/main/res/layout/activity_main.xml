@@ -46,7 +46,7 @@
                         android:text="Rocket"
                         android:textSize="20sp" />
 
-                    <com.james.rocket.SquareImageView
+                    <com.james.rocket.views.SquareImageView
                         android:layout_width="?attr/actionBarSize"
                         android:layout_height="wrap_content"
                         android:id="@+id/options"

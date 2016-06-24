@@ -1,4 +1,4 @@
-package com.james.rocket;
+package com.james.rocket.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -22,8 +22,8 @@ public class SquareImageView extends ImageView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int width = getMeasuredWidth();
-        setMeasuredDimension(width, width);
+        int size = getMeasuredWidth();
+        setMeasuredDimension(size, size);
     }
 
 }
