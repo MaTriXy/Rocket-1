@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <com.james.rocket.views.SquareImageView
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:tint="@android:color/white"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_connection"
+            android:layout_margin="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lost_connection"
+            android:id="@+id/title"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:text="@string/action_settings"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackground"
+        android:layout_gravity="bottom|end"
+        android:id="@+id/action_settings"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
+
+</FrameLayout>

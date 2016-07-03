@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import com.james.rocket.adapters.ProgressAdapter;
 import com.james.rocket.R;
 
-public class Progress extends AppCompatActivity {
+public class ProgressActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,10 +25,9 @@ public class Progress extends AppCompatActivity {
 
         TabLayout tl = (TabLayout) findViewById(R.id.tl);
         ViewPager vp = (ViewPager) findViewById(R.id.vp);
-        vp.setAdapter(new ProgressAdapter(this, getSupportFragmentManager()));
+        vp.setAdapter(new ProgressAdapter(getSupportFragmentManager()));
         tl.setupWithViewPager(vp);
         tl.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tl.setTabTextColors(Color.parseColor("#e0e0e0"), Color.parseColor("#fafafa"));
     }
 
     @Override
@@ -42,7 +41,7 @@ public class Progress extends AppCompatActivity {
     }
 
     private Intent getParentActivityIntentImpl() {
-        Intent i = new Intent(Progress.this, MainActivity.class);
+        Intent i = new Intent(ProgressActivity.this, MainActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return i;
     }

@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="?attr/actionBarSize"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Press to start"
+        android:text="@string/action_start"
         android:textColor="#fafafa"
         android:id="@+id/textView5"
         android:layout_gravity="center_horizontal|top" />

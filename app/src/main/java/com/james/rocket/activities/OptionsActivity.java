@@ -18,7 +18,7 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 import com.james.rocket.BuildConfig;
 import com.james.rocket.R;
 
-public class Options extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class OptionsActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     GoogleApiClient mGoogleApiClient;
 
@@ -43,9 +43,9 @@ public class Options extends AppCompatActivity implements GoogleApiClient.Connec
         findViewById(R.id.reset).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(Options.this).setTitle("Reset").setMessage("Are you sure you want to delete all your progress?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(OptionsActivity.this).setTitle("Reset").setMessage("Are you sure you want to delete all your progress?").setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface d, int id) {
-                        PreferenceManager.getDefaultSharedPreferences(Options.this).edit().clear().apply();
+                        PreferenceManager.getDefaultSharedPreferences(OptionsActivity.this).edit().clear().apply();
                     }
                 }).create().show();
             }
@@ -71,14 +71,14 @@ public class Options extends AppCompatActivity implements GoogleApiClient.Connec
         findViewById(R.id.help).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Options.this, TutorialActivity.class));
+                startActivity(new Intent(OptionsActivity.this, TutorialActivity.class));
             }
         });
 
         findViewById(R.id.credits).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(Options.this).setTitle("Credits").setItems(R.array.credits, new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(OptionsActivity.this).setTitle("Credits").setItems(R.array.credits, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch(which) {
@@ -186,7 +186,7 @@ public class Options extends AppCompatActivity implements GoogleApiClient.Connec
     }
 
     private Intent getParentActivityIntentImpl() {
-        Intent i = new Intent(Options.this, MainActivity.class);
+        Intent i = new Intent(OptionsActivity.this, MainActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return i;
     }

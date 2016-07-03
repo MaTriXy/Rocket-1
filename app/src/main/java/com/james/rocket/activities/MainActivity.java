@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -15,6 +17,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.james.rocket.R;
+import com.james.rocket.utils.PreferenceUtils;
 
 import java.util.Calendar;
 
@@ -65,7 +68,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             findViewById(R.id.special).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, SpecialLevel.class));
+                    Intent i = new Intent(MainActivity.this, FlappyActivity.class);
+                    i.putExtra("level", PreferenceUtils.LevelIdentifier.SPECIAL);
+                    i.putExtra("rocket", R.mipmap.sled);
+                    i.putExtra("antirocket", R.mipmap.snowball);
+                    i.putExtra("background", R.mipmap.snowbg);
+                    i.putExtra("cloud", R.mipmap.cloud);
+                    startActivity(i);
                 }
             });
         }
@@ -78,8 +87,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         findViewById(R.id.easy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Flappy.class);
-                i.putExtra("difficulty", 5000);
+                Intent i = new Intent(MainActivity.this, FlappyActivity.class);
+                i.putExtra("level", PreferenceUtils.LevelIdentifier.EASY);
+                i.putExtra("rocket", R.mipmap.rocket3);
+                i.putExtra("antirocket", R.mipmap.rocket);
+                i.putExtra("background", R.mipmap.bg);
+                i.putExtra("cloud", R.mipmap.cloud);
                 startActivity(i);
             }
         });
@@ -87,8 +100,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         findViewById(R.id.mid).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Flappy.class);
-                i.putExtra("difficulty", 3500);
+                Intent i = new Intent(MainActivity.this, FlappyActivity.class);
+                i.putExtra("level", PreferenceUtils.LevelIdentifier.MEDIUM);
+                i.putExtra("rocket", R.mipmap.rocket4);
+                i.putExtra("antirocket", R.mipmap.rocket2);
+                i.putExtra("background", R.mipmap.sandbg);
+                i.putExtra("cloud", R.mipmap.sandcloud);
                 startActivity(i);
             }
         });
@@ -97,8 +114,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         findViewById(R.id.hard).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Flappy.class);
-                i.putExtra("difficulty", 2000);
+                Intent i = new Intent(MainActivity.this, FlappyActivity.class);
+                i.putExtra("level", PreferenceUtils.LevelIdentifier.HARD);
+                i.putExtra("rocket", R.mipmap.sunnyrocket);
+                i.putExtra("antirocket", R.mipmap.rocket3);
+                i.putExtra("background", R.mipmap.sunnybg);
+                i.putExtra("cloud", R.mipmap.cloud);
                 startActivity(i);
             }
         });
@@ -106,23 +127,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         findViewById(R.id.extr).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Flappy.class);
-                i.putExtra("difficulty", 1000);
+                Intent i = new Intent(MainActivity.this, FlappyActivity.class);
+                i.putExtra("level", PreferenceUtils.LevelIdentifier.EXTREME);
+                i.putExtra("rocket", R.mipmap.spacerocket);
+                i.putExtra("antirocket", R.mipmap.meteor);
+                i.putExtra("background", R.mipmap.spacebg);
+                i.putExtra("cloud", R.mipmap.spacecloud);
                 startActivity(i);
-            }
-        });
-
-        findViewById(R.id.options).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, Options.class));
             }
         });
 
         findViewById(R.id.progress).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, Progress.class));
+                startActivity(new Intent(MainActivity.this, ProgressActivity.class));
             }
         });
 
@@ -149,8 +167,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, OptionsActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onConnected(Bundle bundle) {
-        findViewById(R.id.progress).setVisibility(View.VISIBLE);
         findViewById(R.id.achv).setVisibility(View.VISIBLE);
         findViewById(R.id.scoreboard).setVisibility(View.VISIBLE);
         findViewById(R.id.signin).setVisibility(View.GONE);
@@ -175,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             mSignInClicked = false;
             mAutoStartSignInflow = false;
 
-            mResolvingConnectionFailure = BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN, "Sign-in failed");
+            mResolvingConnectionFailure = BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN, getString(R.string.sign_in_failure));
         } else {
             //add sign in button
             findViewById(R.id.signin).setVisibility(View.VISIBLE);

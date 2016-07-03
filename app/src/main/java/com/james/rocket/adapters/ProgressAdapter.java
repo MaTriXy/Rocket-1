@@ -7,12 +7,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.james.rocket.fragments.ProgressFragment;
+import com.james.rocket.utils.PreferenceUtils;
 
 public class ProgressAdapter extends FragmentPagerAdapter {
 
-    private String[] titles = new String[]{"Easy", "Medium", "Hard", "Extreme"};
-
-    public ProgressAdapter(Context context, FragmentManager fragmentManager) {
+    public ProgressAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
 
@@ -20,19 +19,33 @@ public class ProgressAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = new ProgressFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("position", position);
-        bundle.putString("title", titles[position] + " Mode");
+        bundle.putSerializable("level", getPageLevel(position));
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public int getCount() {
-        return titles.length;
+        return 4;
+    }
+
+    private PreferenceUtils.LevelIdentifier getPageLevel(int position) {
+        switch (position) {
+            case 0:
+                return PreferenceUtils.LevelIdentifier.EASY;
+            case 1:
+                return PreferenceUtils.LevelIdentifier.MEDIUM;
+            case 2:
+                return PreferenceUtils.LevelIdentifier.HARD;
+            case 3:
+                return PreferenceUtils.LevelIdentifier.EXTREME;
+            default:
+                return PreferenceUtils.LevelIdentifier.EASY;
+        }
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return titles[position];
+        return getPageLevel(position).toString();
     }
 }

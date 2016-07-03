@@ -19,44 +19,17 @@
             android:foregroundGravity="bottom|right"
             android:clipToPadding="true"
             app:contentScrim="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed" >
+            app:layout_scrollFlags="scroll|snap"
+            app:titleEnabled="false">
 
             <android.support.v7.widget.Toolbar
                 android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:background="@color/colorPrimary"
                 android:id="@+id/toolbar"
+                app:title="@string/app_name"
                 app:layout_collapseMode="pin"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:gravity="center_vertical"
-                        android:layout_gravity="top"
-                        android:maxLines="1"
-                        android:paddingLeft="2dp"
-                        android:singleLine="true"
-                        android:textColor="#fafafa"
-                        android:text="Rocket"
-                        android:textSize="20sp" />
-
-                    <com.james.rocket.views.SquareImageView
-                        android:layout_width="?attr/actionBarSize"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/options"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:layout_gravity="right|top"
-                        android:src="@mipmap/settings"
-                        android:tint="#fafafa"
-                        android:padding="15dp" />
-                </FrameLayout>
-            </android.support.v7.widget.Toolbar>
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
             <Space
                 android:layout_width="match_parent"
@@ -96,18 +69,18 @@
                     android:orientation="vertical"
                     android:background="#fafafa">
 
-                    <ImageView
+                    <com.james.rocket.views.RatioImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/special"
-                        android:tint="#212121"
+                        android:tint="@color/colorPrimary"
                         android:padding="36dp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Winter Mode"
-                        android:textColor="#212121"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="20sp"
                         android:layout_marginLeft="16dp"
                         android:layout_marginTop="8dp"
@@ -118,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="What's this!? A... hidden level? No way! And it's only unlocked during december, too!"
-                        android:textColor="#212121"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="14sp"
                         android:layout_marginLeft="16dp"
                         android:layout_marginTop="4dp"
@@ -142,27 +115,26 @@
                     android:layout_height="match_parent"
                     android:background="@color/colorPrimaryDark">
 
-                    <ImageView
+                    <com.james.rocket.views.SquareImageView
                         android:layout_width="88dp"
                         android:layout_height="88dp"
-                        android:src="@mipmap/easy"
-                        android:tint="#fafafa"
-                        android:layout_weight="0"
-                        android:layout_gravity="center_vertical|left"
+                        android:src="@drawable/ic_easy"
+                        android:tint="@android:color/white"
+                        android:layout_gravity="center_vertical|start"
                         android:layout_margin="16dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="120dp">
+                        android:layout_marginLeft="120dp"
+                        android:layout_marginStart="120dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Easy Mode"
-                            android:textColor="#fafafa"
+                            android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="8dp"
@@ -173,7 +145,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="A walk in the park compared to all the other levels. Rack up points and experience before moving on to a higher level."
-                            android:textColor="#fafafa"
+                            android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="4dp"
@@ -184,7 +156,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="1x score multiplier"
-                            android:textColor="#eeeeee"
+                            android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
                             android:layout_marginLeft="16dp"
@@ -209,27 +181,26 @@
                     android:layout_height="match_parent"
                     android:background="@color/colorPrimaryDark">
 
-                    <ImageView
+                    <com.james.rocket.views.SquareImageView
                         android:layout_width="88dp"
                         android:layout_height="88dp"
-                        android:src="@mipmap/medium"
-                        android:tint="#fafafa"
-                        android:layout_weight="0"
-                        android:layout_gravity="center_vertical|left"
+                        app:srcCompat="@drawable/ic_medium"
+                        android:tint="@android:color/white"
+                        android:layout_gravity="center_vertical|start"
                         android:layout_margin="16dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="120dp">
+                        android:layout_marginLeft="120dp"
+                        android:layout_marginStart="120dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Medium Mode"
-                            android:textColor="#fafafa"
+                            android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="8dp"
@@ -240,7 +211,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="A little harder of a level. Still possible to beat though. Unless you happen to be biking along a road filled with potholes."
-                            android:textColor="#fafafa"
+                            android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="4dp"
@@ -251,7 +222,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="2x score multiplier"
-                            android:textColor="#eeeeee"
+                            android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
                             android:layout_marginLeft="16dp"
@@ -277,27 +248,26 @@
                     android:layout_height="match_parent"
                     android:background="@color/colorPrimaryDark">
 
-                    <ImageView
+                    <com.james.rocket.views.SquareImageView
                         android:layout_width="88dp"
                         android:layout_height="88dp"
-                        android:src="@mipmap/hard"
-                        android:tint="#fafafa"
-                        android:layout_weight="0"
-                        android:layout_gravity="center_vertical|left"
+                        app:srcCompat="@drawable/ic_hard"
+                        android:tint="@android:color/white"
+                        android:layout_gravity="center_vertical|start"
                         android:layout_margin="16dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="120dp">
+                        android:layout_marginLeft="120dp"
+                        android:layout_marginStart="120dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Hard Mode"
-                            android:textColor="#fafafa"
+                            android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="8dp"
@@ -308,7 +278,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Hard to beat. It takes a while to get here. At least it is still possible..."
-                            android:textColor="#fafafa"
+                            android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="4dp"
@@ -319,7 +289,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="3x score multiplier"
-                            android:textColor="#eeeeee"
+                            android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
                             android:layout_marginLeft="16dp"
@@ -345,27 +315,26 @@
                     android:layout_height="match_parent"
                     android:background="@color/colorPrimaryDark">
 
-                    <ImageView
+                    <com.james.rocket.views.SquareImageView
                         android:layout_width="88dp"
                         android:layout_height="88dp"
-                        android:src="@mipmap/extreme"
-                        android:tint="#fafafa"
-                        android:layout_weight="0"
-                        android:layout_gravity="center_vertical|left"
+                        app:srcCompat="@drawable/ic_extreme"
+                        android:tint="@android:color/white"
+                        android:layout_gravity="center_vertical|start"
                         android:layout_margin="16dp" />
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="120dp">
+                        android:layout_marginLeft="120dp"
+                        android:layout_marginStart="120dp">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Extreme Mode"
-                            android:textColor="#fafafa"
+                            android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="8dp"
@@ -376,7 +345,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Very nearly impossible to master. Those that can handle this level must have ninja reaction times."
-                            android:textColor="#fafafa"
+                            android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="4dp"
@@ -387,7 +356,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="5x score multiplier"
-                            android:textColor="#eeeeee"
+                            android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
                             android:layout_marginLeft="16dp"
@@ -417,13 +386,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_weight="1"
-                    android:id="@+id/progress"
-                    android:visibility="gone" >
+                    android:id="@+id/progress">
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/progress"
+                        app:srcCompat="@drawable/ic_progress"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"
@@ -446,10 +414,10 @@
                     android:id="@+id/achv"
                     android:visibility="gone" >
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/achievements"
+                        app:srcCompat="@drawable/ic_stars"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"
@@ -470,10 +438,10 @@
                     android:layout_weight="1"
                     android:id="@+id/scoreboard"
                     android:visibility="gone" >
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/leaderboard"
+                        app:srcCompat="@drawable/ic_leaderboard"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"

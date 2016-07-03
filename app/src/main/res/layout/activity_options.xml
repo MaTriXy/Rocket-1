@@ -69,10 +69,10 @@
                     android:layout_weight="1"
                     android:id="@+id/reset" >
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/reset"
+                        app:srcCompat="@drawable/ic_reset"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"
                         android:tint="#fafafa" />
@@ -95,10 +95,10 @@
                     android:id="@+id/signout"
                     android:visibility="gone">
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/user"
+                        app:srcCompat="@drawable/ic_person"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"
                         android:tint="#fafafa" />
@@ -120,10 +120,10 @@
                     android:layout_weight="1"
                     android:id="@+id/rate">
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/rate"
+                        app:srcCompat="@drawable/ic_rate"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"
                         android:tint="#fafafa" />
@@ -154,10 +154,10 @@
                     android:layout_weight="1"
                     android:id="@+id/help">
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/help"
+                        app:srcCompat="@drawable/ic_help"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"
                         android:tint="#fafafa" />
@@ -180,10 +180,10 @@
                     android:layout_weight="1"
                     android:id="@+id/credits" >
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/credits"
+                        app:srcCompat="@drawable/ic_people"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"
                         android:tint="#fafafa" />
@@ -204,10 +204,10 @@
                     android:layout_weight="1"
                     android:id="@+id/info" >
 
-                    <ImageView
+                    <android.support.v7.widget.AppCompatImageView
                         android:layout_width="match_parent"
                         android:layout_height="24dp"
-                        android:src="@mipmap/info"
+                        app:srcCompat="@drawable/ic_info"
                         android:layout_margin="8dp"
                         android:layout_gravity="top"
                         android:tint="#fafafa" />
