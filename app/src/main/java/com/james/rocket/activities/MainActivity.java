@@ -2,9 +2,13 @@ package com.james.rocket.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -168,6 +172,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        Drawable settings = ContextCompat.getDrawable(this, R.drawable.ic_settings);
+        DrawableCompat.setTint(settings, Color.WHITE);
+        menu.findItem(R.id.action_settings).setIcon(settings);
         return super.onCreateOptionsMenu(menu);
     }
 

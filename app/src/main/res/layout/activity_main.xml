@@ -20,7 +20,8 @@
             android:clipToPadding="true"
             app:contentScrim="@color/colorPrimary"
             app:layout_scrollFlags="scroll|snap"
-            app:titleEnabled="false">
+            app:titleEnabled="false"
+            android:background="@color/colorPrimary">
 
             <android.support.v7.widget.Toolbar
                 android:layout_height="?attr/actionBarSize"
@@ -137,7 +138,7 @@
                             android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginRight="16dp"
                             android:layout_marginBottom="4dp" />
 
@@ -156,7 +157,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="1x score multiplier"
-                            android:textColor="?android:textColorSecondaryInverse"
+                            android:textColor="?android:textColorTertiaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
                             android:layout_marginLeft="16dp"
@@ -203,7 +204,7 @@
                             android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginRight="16dp"
                             android:layout_marginBottom="4dp" />
 
@@ -222,7 +223,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="2x score multiplier"
-                            android:textColor="?android:textColorSecondaryInverse"
+                            android:textColor="?android:textColorTertiaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
                             android:layout_marginLeft="16dp"
@@ -270,7 +271,7 @@
                             android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginRight="16dp"
                             android:layout_marginBottom="4dp" />
 
@@ -289,7 +290,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="3x score multiplier"
-                            android:textColor="?android:textColorSecondaryInverse"
+                            android:textColor="?android:textColorTertiaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
                             android:layout_marginLeft="16dp"
@@ -337,7 +338,7 @@
                             android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginRight="16dp"
                             android:layout_marginBottom="4dp" />
 
@@ -356,7 +357,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="5x score multiplier"
-                            android:textColor="?android:textColorSecondaryInverse"
+                            android:textColor="?android:textColorTertiaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
                             android:layout_marginLeft="16dp"

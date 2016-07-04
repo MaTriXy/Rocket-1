@@ -16,7 +16,7 @@ public class ProgressFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.item_progress, container, false);
+        View v = inflater.inflate(R.layout.fragment_progress, container, false);
 
         PreferenceUtils.LevelIdentifier level = (PreferenceUtils.LevelIdentifier) getArguments().getSerializable("level");
 
