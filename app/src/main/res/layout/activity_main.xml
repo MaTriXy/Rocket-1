@@ -80,7 +80,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Winter Mode"
+                        android:text="@string/mode_winter"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="20sp"
                         android:layout_marginLeft="16dp"
@@ -91,7 +91,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="What's this!? A... hidden level? No way! And it's only unlocked during december, too!"
+                        android:text="@string/mode_winter_desc"
                         android:textColor="@color/colorPrimary"
                         android:textSize="14sp"
                         android:layout_marginLeft="16dp"
@@ -134,7 +134,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Easy Mode"
+                            android:text="@string/mode_easy"
                             android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
@@ -145,7 +145,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="A walk in the park compared to all the other levels. Rack up points and experience before moving on to a higher level."
+                            android:text="@string/mode_easy_desc"
                             android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:layout_marginLeft="16dp"
@@ -156,7 +156,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="1x score multiplier"
+                            android:text="@string/mode_easy_multiplier"
                             android:textColor="?android:textColorTertiaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
@@ -200,7 +200,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Medium Mode"
+                            android:text="@string/mode_medium"
                             android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
@@ -211,7 +211,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="A little harder of a level. Still possible to beat though. Unless you happen to be biking along a road filled with potholes."
+                            android:text="@string/mode_medium_desc"
                             android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:layout_marginLeft="16dp"
@@ -222,7 +222,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="2x score multiplier"
+                            android:text="@string/mode_medium_multiplier"
                             android:textColor="?android:textColorTertiaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
@@ -267,7 +267,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Hard Mode"
+                            android:text="@string/mode_hard"
                             android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
@@ -278,7 +278,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Hard to beat. It takes a while to get here. At least it is still possible..."
+                            android:text="@string/mode_hard_desc"
                             android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:layout_marginLeft="16dp"
@@ -289,7 +289,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="3x score multiplier"
+                            android:text="@string/mode_hard_multiplier"
                             android:textColor="?android:textColorTertiaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
@@ -334,7 +334,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Extreme Mode"
+                            android:text="@string/mode_extreme"
                             android:textColor="?android:textColorPrimaryInverse"
                             android:textSize="20sp"
                             android:layout_marginLeft="16dp"
@@ -345,7 +345,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Very nearly impossible to master. Those that can handle this level must have ninja reaction times."
+                            android:text="@string/mode_extreme_desc"
                             android:textColor="?android:textColorSecondaryInverse"
                             android:textSize="14sp"
                             android:layout_marginLeft="16dp"
@@ -356,7 +356,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="5x score multiplier"
+                            android:text="@string/mode_extreme_multiplier"
                             android:textColor="?android:textColorTertiaryInverse"
                             android:textSize="14sp"
                             android:textStyle="italic"
@@ -401,7 +401,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Progress"
+                        android:text="@string/title_progress"
                         android:id="@+id/textView"
                         android:layout_gravity="center_horizontal|bottom"
                         android:textSize="14sp"
@@ -427,7 +427,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Achievements"
+                        android:text="@string/title_achievements"
                         android:layout_gravity="center_horizontal|bottom"
                         android:textSize="14sp"
                         android:textColor="#212121" />
@@ -450,7 +450,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Leaderboard"
+                        android:text="@string/title_leaderboard"
                         android:id="@+id/textView2"
                         android:layout_gravity="center_horizontal|bottom"
                         android:textSize="14sp"

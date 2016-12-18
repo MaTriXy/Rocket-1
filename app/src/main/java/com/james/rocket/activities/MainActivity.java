@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         };
 
-        if (Calendar.getInstance().get(Calendar.MONTH) == 11) {
+        if (Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER) {
             findViewById(R.id.special).setVisibility(View.VISIBLE);
             findViewById(R.id.special).setOnTouchListener(onTouchListener);
             findViewById(R.id.special).setOnClickListener(new View.OnClickListener() {
