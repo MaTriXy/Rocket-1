@@ -223,7 +223,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             if (v != mid) mid.setVisibility(View.GONE);
             if (v != hard) hard.setVisibility(View.GONE);
             if (v != extr) extr.setVisibility(View.GONE);
-            isExpanded = false;
         } else {
             if (special.isEnabled())
                 special.setVisibility(View.VISIBLE);
@@ -231,7 +230,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             mid.setVisibility(View.VISIBLE);
             hard.setVisibility(View.VISIBLE);
             extr.setVisibility(View.VISIBLE);
-            isExpanded = true;
         }
+
+        isExpanded = !isExpanded;
+        findViewById(R.id.play).setVisibility(isExpanded ? View.GONE : View.VISIBLE);
     }
 }

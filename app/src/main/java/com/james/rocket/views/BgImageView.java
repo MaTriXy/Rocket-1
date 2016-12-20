@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -34,20 +33,13 @@ public class BgImageView extends ImageView {
 
     private void init() {
         paint = new Paint();
-
         measure();
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                if (background != null) invalidate();
-                postDelayed(this, 20);
-            }
-        });
     }
 
     public void setBackground(Bitmap background) {
         this.background = background;
         measure();
+        invalidate();
     }
 
     public void setCloud(Bitmap cloud) {
@@ -73,6 +65,7 @@ public class BgImageView extends ImageView {
 
                 w = (height * background.getWidth()) / background.getHeight();
                 background = Bitmap.createScaledBitmap(background, w, height, true);
+                invalidate();
                 return true;
             }
         });
@@ -99,5 +92,6 @@ public class BgImageView extends ImageView {
         }
 
         lefty -= interval;
+        postInvalidateDelayed(20);
     }
 }
