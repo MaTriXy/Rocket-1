@@ -28,7 +28,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private GoogleApiClient mGoogleApiClient;
-    private View special, easy, mid, hard, extr;
+    private View special, easy, mid, hard, extr, dropDown, play;
     private boolean isExpanded;
 
     @Override
@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mid = findViewById(R.id.mid);
         hard = findViewById(R.id.hard);
         extr = findViewById(R.id.extr);
+        dropDown = findViewById(R.id.dropDown);
+        play = findViewById(R.id.play);
 
         if (Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER) {
             special.setEnabled(true);
@@ -65,8 +67,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mid.setOnClickListener(this);
         hard.setOnClickListener(this);
         extr.setOnClickListener(this);
+        dropDown.setOnClickListener(this);
 
-        findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
+        play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isExpanded) {
@@ -233,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         isExpanded = !isExpanded;
-        findViewById(R.id.play).setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+        play.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+        dropDown.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
     }
 }
