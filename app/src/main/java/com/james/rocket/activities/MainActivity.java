@@ -3,8 +3,8 @@ package com.james.rocket.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -22,12 +21,15 @@ import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.james.rocket.R;
 import com.james.rocket.utils.PreferenceUtils;
+import com.james.rocket.views.BgImageView;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
+    private View special, easy, mid, hard, extr;
+    private boolean isExpanded;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,96 +50,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    switch(event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            v.animate().translationZ(16.0f).setDuration(150).start();
-                            break;
-                        case MotionEvent.ACTION_CANCEL:
-                        case MotionEvent.ACTION_UP:
-                            v.animate().translationZ(0.0f).setDuration(150).start();
-                            break;
-                    }
-                }
-                return false;
-            }
-        };
+        special = findViewById(R.id.special);
+        easy = findViewById(R.id.easy);
+        mid = findViewById(R.id.mid);
+        hard = findViewById(R.id.hard);
+        extr = findViewById(R.id.extr);
 
         if (Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER) {
-            findViewById(R.id.special).setVisibility(View.VISIBLE);
-            findViewById(R.id.special).setOnTouchListener(onTouchListener);
-            findViewById(R.id.special).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(MainActivity.this, FlappyActivity.class);
-                    i.putExtra("level", PreferenceUtils.LevelIdentifier.SPECIAL);
-                    i.putExtra("rocket", R.mipmap.sled);
-                    i.putExtra("antirocket", R.mipmap.snowball);
-                    i.putExtra("background", R.mipmap.snowbg);
-                    i.putExtra("cloud", R.mipmap.cloud);
-                    startActivity(i);
-                }
-            });
+            special.setEnabled(true);
+            special.setOnClickListener(this);
         }
 
-        findViewById(R.id.easy).setOnTouchListener(onTouchListener);
-        findViewById(R.id.mid).setOnTouchListener(onTouchListener);
-        findViewById(R.id.hard).setOnTouchListener(onTouchListener);
-        findViewById(R.id.extr).setOnTouchListener(onTouchListener);
+        easy.setOnClickListener(this);
+        mid.setOnClickListener(this);
+        hard.setOnClickListener(this);
+        extr.setOnClickListener(this);
 
-        findViewById(R.id.easy).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, FlappyActivity.class);
-                i.putExtra("level", PreferenceUtils.LevelIdentifier.EASY);
-                i.putExtra("rocket", R.mipmap.rocket3);
-                i.putExtra("antirocket", R.mipmap.rocket);
-                i.putExtra("background", R.mipmap.bg);
-                i.putExtra("cloud", R.mipmap.cloud);
-                startActivity(i);
-            }
-        });
-
-        findViewById(R.id.mid).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, FlappyActivity.class);
-                i.putExtra("level", PreferenceUtils.LevelIdentifier.MEDIUM);
-                i.putExtra("rocket", R.mipmap.rocket4);
-                i.putExtra("antirocket", R.mipmap.rocket2);
-                i.putExtra("background", R.mipmap.sandbg);
-                i.putExtra("cloud", R.mipmap.sandcloud);
-                startActivity(i);
-            }
-        });
-
-
-        findViewById(R.id.hard).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, FlappyActivity.class);
-                i.putExtra("level", PreferenceUtils.LevelIdentifier.HARD);
-                i.putExtra("rocket", R.mipmap.sunnyrocket);
-                i.putExtra("antirocket", R.mipmap.rocket3);
-                i.putExtra("background", R.mipmap.sunnybg);
-                i.putExtra("cloud", R.mipmap.cloud);
-                startActivity(i);
-            }
-        });
-
-        findViewById(R.id.extr).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, FlappyActivity.class);
-                i.putExtra("level", PreferenceUtils.LevelIdentifier.EXTREME);
-                i.putExtra("rocket", R.mipmap.spacerocket);
-                i.putExtra("antirocket", R.mipmap.meteor);
-                i.putExtra("background", R.mipmap.spacebg);
-                i.putExtra("cloud", R.mipmap.spacecloud);
-                startActivity(i);
+                if (!isExpanded) {
+                    if (easy.getVisibility() == View.VISIBLE)
+                        startGame(PreferenceUtils.LevelIdentifier.EASY, R.mipmap.rocket3, R.mipmap.rocket, R.mipmap.bg, R.mipmap.cloud);
+                    else if (mid.getVisibility() == View.VISIBLE)
+                        startGame(PreferenceUtils.LevelIdentifier.MEDIUM, R.mipmap.rocket4, R.mipmap.rocket2, R.mipmap.sandbg, R.mipmap.sandcloud);
+                    else if (hard.getVisibility() == View.VISIBLE)
+                        startGame(PreferenceUtils.LevelIdentifier.HARD, R.mipmap.sunnyrocket, R.mipmap.rocket3, R.mipmap.sunnybg, R.mipmap.cloud);
+                    else if (extr.getVisibility() == View.VISIBLE)
+                        startGame(PreferenceUtils.LevelIdentifier.EXTREME, R.mipmap.spacerocket, R.mipmap.meteor, R.mipmap.spacebg, R.mipmap.spacecloud);
+                    else if (special.getVisibility() == View.VISIBLE)
+                        startGame(PreferenceUtils.LevelIdentifier.SPECIAL, R.mipmap.sled, R.mipmap.snowball, R.mipmap.snowbg, R.mipmap.cloud);
+                }
             }
         });
 
@@ -168,6 +111,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 signInClicked();
             }
         });
+
+        BgImageView imageView = (BgImageView) findViewById(R.id.bg);
+        imageView.setBackground(((BitmapDrawable) ContextCompat.getDrawable(this, R.mipmap.spacebg)).getBitmap());
+        imageView.setSpeed(5);
+    }
+
+    public void startGame(PreferenceUtils.LevelIdentifier level, int rocket, int projectile, int background, int cloud) {
+        Intent i = new Intent(MainActivity.this, FlappyActivity.class);
+        i.putExtra(FlappyActivity.EXTRA_LEVEL, level);
+        i.putExtra(FlappyActivity.EXTRA_ROCKET, rocket);
+        i.putExtra(FlappyActivity.EXTRA_PROJECTILE, projectile);
+        i.putExtra(FlappyActivity.EXTRA_BACKGROUND, background);
+        i.putExtra(FlappyActivity.EXTRA_CLOUD, cloud);
+        startActivity(i);
     }
 
     @Override
@@ -246,16 +203,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (requestCode == RC_SIGN_IN) {
             mSignInClicked = false;
             mResolvingConnectionFailure = false;
-            if (resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK)
                 mGoogleApiClient.connect();
-            } else {
+            else
                 BaseGameUtils.showActivityResultError(this, requestCode, resultCode, R.string.sign_in_failure);
-            }
         }
     }
 
     private void signInClicked() {
         mSignInClicked = true;
         mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (isExpanded) {
+            if (v != special) special.setVisibility(View.GONE);
+            if (v != easy) easy.setVisibility(View.GONE);
+            if (v != mid) mid.setVisibility(View.GONE);
+            if (v != hard) hard.setVisibility(View.GONE);
+            if (v != extr) extr.setVisibility(View.GONE);
+            isExpanded = false;
+        } else {
+            if (special.isEnabled())
+                special.setVisibility(View.VISIBLE);
+            easy.setVisibility(View.VISIBLE);
+            mid.setVisibility(View.VISIBLE);
+            hard.setVisibility(View.VISIBLE);
+            extr.setVisibility(View.VISIBLE);
+            isExpanded = true;
+        }
     }
 }

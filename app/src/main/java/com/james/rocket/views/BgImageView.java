@@ -15,32 +15,39 @@ public class BgImageView extends ImageView {
 
     private Bitmap background, cloud;
     private int lefty = 0, width, w, c1, c2, interval = 5;
-    private Handler h;
     private Paint paint;
 
     public BgImageView(Context context) {
         super(context);
-        paint = new Paint();
-        h = new Handler();
-        measure();
+        init();
     }
 
     public BgImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        paint = new Paint();
-        h = new Handler();
-        measure();
+        init();
     }
 
     public BgImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init() {
         paint = new Paint();
-        h = new Handler();
+
         measure();
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                if (background != null) invalidate();
+                postDelayed(this, 20);
+            }
+        });
     }
 
     public void setBackground(Bitmap background) {
         this.background = background;
+        measure();
     }
 
     public void setCloud(Bitmap cloud) {
@@ -71,34 +78,25 @@ public class BgImageView extends ImageView {
         });
     }
 
-    private Runnable r = new Runnable() {
-        @Override
-        public void run() {
-            invalidate();
-        }
-    };
-
     @Override
-    public void onDraw(Canvas canvas) {
-        drawEndlessBackground(canvas);
-
-        h.postDelayed(r, 20);
-    }
-
-    private void drawEndlessBackground(Canvas canvas) {
+    public void draw(Canvas canvas) {
         if (lefty < 0) {
             lefty = w;
             Random r = new Random();
             c2 = c1;
-            c1 = r.nextInt(width/2);
+            c1 = r.nextInt(width / 2);
         }
 
-        canvas.drawBitmap(background, lefty, 0, paint);
-        canvas.drawBitmap(background, lefty - w, 0, paint);
+        if (background != null) {
+            canvas.drawBitmap(background, lefty, 0, paint);
+            canvas.drawBitmap(background, lefty - w, 0, paint);
+        }
 
-        canvas.drawBitmap(cloud, lefty * 2, c1, paint);
-        canvas.drawBitmap(cloud, (lefty - w) * 2, c2, paint);
-        canvas.drawBitmap(cloud, (lefty - w/3)*2, c2/2, paint);
+        if (cloud != null) {
+            canvas.drawBitmap(cloud, lefty * 2, c1, paint);
+            canvas.drawBitmap(cloud, (lefty - w) * 2, c2, paint);
+            canvas.drawBitmap(cloud, (lefty - w / 3) * 2, c2 / 2, paint);
+        }
 
         lefty -= interval;
     }

@@ -1,462 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:foregroundGravity="bottom|right"
-            android:clipToPadding="true"
-            app:contentScrim="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|snap"
-            app:titleEnabled="false"
-            android:background="@color/colorPrimary">
-
-            <android.support.v7.widget.Toolbar
-                android:layout_height="?attr/actionBarSize"
-                android:layout_width="match_parent"
-                android:background="@color/colorPrimary"
-                android:id="@+id/toolbar"
-                app:title="@string/app_name"
-                app:layout_collapseMode="pin"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="138dp"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.7" />
-
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:orientation="horizontal"
+    <com.james.rocket.views.BgImageView
+        android:id="@+id/bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center|top"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:behavior_overlapTop="80dp">
+        android:background="#000"
+        android:src="@mipmap/spacebg" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/transparent"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="@string/app_name" />
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardUseCompatPadding="true"
-                android:layout_margin="8dp"
-                android:id="@+id/special"
-                android:foreground="?attr/selectableItemBackground"
-                android:visibility="gone">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="#fafafa">
-
-                    <com.james.rocket.views.RatioImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/special"
-                        android:tint="@color/colorPrimary"
-                        android:padding="36dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/mode_winter"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="20sp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginBottom="4dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/mode_winter_desc"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="14sp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginBottom="16dp" />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardUseCompatPadding="true"
-                android:layout_margin="8dp"
-                android:id="@+id/easy"
-                android:foreground="?attr/selectableItemBackground">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorPrimaryDark">
-
-                    <com.james.rocket.views.SquareImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        android:src="@drawable/ic_easy"
-                        android:tint="@android:color/white"
-                        android:layout_gravity="center_vertical|start"
-                        android:layout_margin="16dp" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="120dp"
-                        android:layout_marginStart="120dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_easy"
-                            android:textColor="?android:textColorPrimaryInverse"
-                            android:textSize="20sp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_easy_desc"
-                            android:textColor="?android:textColorSecondaryInverse"
-                            android:textSize="14sp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_easy_multiplier"
-                            android:textColor="?android:textColorTertiaryInverse"
-                            android:textSize="14sp"
-                            android:textStyle="italic"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="16dp" />
-                    </LinearLayout>
-
-                </FrameLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardUseCompatPadding="true"
-                android:layout_margin="8dp"
-                android:id="@+id/mid"
-                android:foreground="?attr/selectableItemBackground">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorPrimaryDark">
-
-                    <com.james.rocket.views.SquareImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        app:srcCompat="@drawable/ic_medium"
-                        android:tint="@android:color/white"
-                        android:layout_gravity="center_vertical|start"
-                        android:layout_margin="16dp" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="120dp"
-                        android:layout_marginStart="120dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_medium"
-                            android:textColor="?android:textColorPrimaryInverse"
-                            android:textSize="20sp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_medium_desc"
-                            android:textColor="?android:textColorSecondaryInverse"
-                            android:textSize="14sp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_medium_multiplier"
-                            android:textColor="?android:textColorTertiaryInverse"
-                            android:textSize="14sp"
-                            android:textStyle="italic"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="16dp" />
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardUseCompatPadding="true"
-                android:layout_margin="8dp"
-                android:id="@+id/hard"
-                android:foreground="?attr/selectableItemBackground">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorPrimaryDark">
-
-                    <com.james.rocket.views.SquareImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        app:srcCompat="@drawable/ic_hard"
-                        android:tint="@android:color/white"
-                        android:layout_gravity="center_vertical|start"
-                        android:layout_margin="16dp" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="120dp"
-                        android:layout_marginStart="120dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_hard"
-                            android:textColor="?android:textColorPrimaryInverse"
-                            android:textSize="20sp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_hard_desc"
-                            android:textColor="?android:textColorSecondaryInverse"
-                            android:textSize="14sp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_hard_multiplier"
-                            android:textColor="?android:textColorTertiaryInverse"
-                            android:textSize="14sp"
-                            android:textStyle="italic"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="16dp" />
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                card_view:cardUseCompatPadding="true"
-                android:layout_margin="8dp"
-                android:id="@+id/extr"
-                android:foreground="?attr/selectableItemBackground">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorPrimaryDark">
-
-                    <com.james.rocket.views.SquareImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        app:srcCompat="@drawable/ic_extreme"
-                        android:tint="@android:color/white"
-                        android:layout_gravity="center_vertical|start"
-                        android:layout_margin="16dp" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="120dp"
-                        android:layout_marginStart="120dp">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_extreme"
-                            android:textColor="?android:textColorPrimaryInverse"
-                            android:textSize="20sp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_extreme_desc"
-                            android:textColor="?android:textColorSecondaryInverse"
-                            android:textSize="14sp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="4dp" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/mode_extreme_multiplier"
-                            android:textColor="?android:textColorTertiaryInverse"
-                            android:textSize="14sp"
-                            android:textStyle="italic"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="16dp"
-                            android:layout_marginBottom="16dp" />
-                    </LinearLayout>
-
-                </FrameLayout>
-
-            </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+                android:id="@+id/layout"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp">
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
 
-                <com.google.android.gms.common.SignInButton
+                <TextView
+                    android:id="@+id/special"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:id="@+id/signin"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:text="@string/mode_winter"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary"
                     android:visibility="gone" />
 
-                <FrameLayout
+                <TextView
+                    android:id="@+id/easy"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_weight="1"
-                    android:id="@+id/progress">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:text="@string/mode_easy"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary" />
 
-                    <android.support.v7.widget.AppCompatImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        app:srcCompat="@drawable/ic_progress"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:layout_margin="8dp"
-                        android:layout_gravity="top"
-                        android:tint="#212121" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_progress"
-                        android:id="@+id/textView"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:textSize="14sp"
-                        android:textColor="#212121" />
-                </FrameLayout>
-
-                <FrameLayout
+                <TextView
+                    android:id="@+id/mid"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_weight="1"
-                    android:id="@+id/achv"
-                    android:visibility="gone" >
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:text="@string/mode_medium"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary"
+                    android:visibility="gone" />
 
-                    <android.support.v7.widget.AppCompatImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        app:srcCompat="@drawable/ic_stars"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:layout_margin="8dp"
-                        android:layout_gravity="top"
-                        android:tint="#212121" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_achievements"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:textSize="14sp"
-                        android:textColor="#212121" />
-                </FrameLayout>
-
-                <FrameLayout
+                <TextView
+                    android:id="@+id/hard"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_weight="1"
-                    android:id="@+id/scoreboard"
-                    android:visibility="gone" >
-                    <android.support.v7.widget.AppCompatImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        app:srcCompat="@drawable/ic_leaderboard"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:layout_margin="8dp"
-                        android:layout_gravity="top"
-                        android:tint="#212121" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_leaderboard"
-                        android:id="@+id/textView2"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:textSize="14sp"
-                        android:textColor="#212121" />
-                </FrameLayout>
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:text="@string/mode_hard"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/extr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:text="@string/mode_extreme"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary"
+                    android:visibility="gone" />
+
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/play"
+            android:textColor="?android:textColorPrimaryInverse"
+            android:backgroundTint="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:orientation="horizontal">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/signin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_gravity="top"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="?android:textColorPrimaryInverse"
+                app:srcCompat="@drawable/ic_progress" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:text="@string/title_progress"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="14sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/achv"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_gravity="top"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="?android:textColorPrimaryInverse"
+                app:srcCompat="@drawable/ic_stars" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:text="@string/title_achievements"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="14sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/scoreboard"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_weight="1"
+            android:visibility="gone">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_gravity="top"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="?android:textColorPrimaryInverse"
+                app:srcCompat="@drawable/ic_leaderboard" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:text="@string/title_leaderboard"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="14sp" />
+        </FrameLayout>
+
+    </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

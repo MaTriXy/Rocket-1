@@ -42,6 +42,7 @@
     <string name="mode_easy_multiplier">1x score multiplier</string>
     <string name="mode_winter">Winter Mode</string>
     <string name="mode_winter_desc">What\'s this!? A… hidden level? No way! And it\'s only unlocked during december, too!</string>
+    <string name="play">Play</string>
 
     <string-array name="credits">
         <item>Brice Seibert - designed the easy mode and… something secret ;)</item>

@@ -2,13 +2,11 @@ package com.james.rocket.activities;
 
 import android.animation.Animator;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +32,13 @@ import com.james.rocket.views.BgImageView;
 import java.util.Random;
 
 public class FlappyActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
+    public final static String EXTRA_LEVEL = "level";
+    public final static String EXTRA_ROCKET = "rocket";
+    public final static String EXTRA_PROJECTILE = "projectile";
+    public final static String EXTRA_BACKGROUND = "background";
+    public final static String EXTRA_CLOUD = "cloud";
+
 
     ImageView flappy, antiflappy;
     BgImageView bg;
@@ -69,14 +74,14 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         height = metrics.heightPixels;
-        initial = height/2;
+        initial = height / 2;
 
-        level = (PreferenceUtils.LevelIdentifier) getIntent().getSerializableExtra("level");
+        level = (PreferenceUtils.LevelIdentifier) getIntent().getSerializableExtra(EXTRA_LEVEL);
 
-        rocket = ContextCompat.getDrawable(this, getIntent().getIntExtra("rocket", R.mipmap.rocket3));
-        antirocket = ContextCompat.getDrawable(this, getIntent().getIntExtra("antirocket", R.mipmap.rocket));
-        background = ContextCompat.getDrawable(this, getIntent().getIntExtra("background", R.mipmap.bg));
-        cloud = ContextCompat.getDrawable(this, getIntent().getIntExtra("cloud", R.mipmap.cloud));
+        rocket = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_ROCKET, R.mipmap.rocket3));
+        antirocket = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_PROJECTILE, R.mipmap.rocket));
+        background = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_BACKGROUND, R.mipmap.bg));
+        cloud = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_CLOUD, R.mipmap.cloud));
 
         bg = (BgImageView) findViewById(R.id.bg);
 
@@ -190,10 +195,13 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                     Point size = new Point();
                     getWindowManager().getDefaultDisplay().getSize(size);
                     Random r = new Random();
-                    antiflappy.setImageDrawable(getResources().getDrawable(R.mipmap.warning));
+                    antiflappy.setImageDrawable(ContextCompat.getDrawable(FlappyActivity.this, R.drawable.ic_warning));
+                    antiflappy.setScaleY(-1);
+                    antiflappy.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                     antiflappy.setY(r.nextInt(size.y));
                     antiwidth = size.x - antiflappy.getWidth();
                     antiflappy.setX(antiwidth);
+
                     new Thread(){
                         @Override
                         public void run() {
@@ -206,7 +214,9 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                                 @Override
                                 public void run() {
                                     antiflappy.setX(widthanti);
+                                    antiflappy.setScaleType(ImageView.ScaleType.FIT_CENTER);
                                     antiflappy.setImageDrawable(antirocket);
+                                    antiflappy.setScaleY(1);
                                     antiflappy.animate().x(antiflappy.getWidth()*-1).setDuration(difficulty / 2).start();
                                 }
                             });
