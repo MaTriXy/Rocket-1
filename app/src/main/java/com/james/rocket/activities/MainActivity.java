@@ -1,20 +1,28 @@
 package com.james.rocket.activities;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
@@ -27,8 +35,19 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
+    private static final String BACKGROUND = "https://theandroidmaster.github.io/images/rocket/bg.png";
+    private static final String BACKGROUND_SAND = "https://theandroidmaster.github.io/images/rocket/sandbg.png";
+    private static final String BACKGROUND_SUNNY = "https://theandroidmaster.github.io/images/rocket/sunnybg.png";
+    private static final String BACKGROUND_SPACE = "https://theandroidmaster.github.io/images/rocket/spacebg.png";
+    private static final String BACKGROUND_SPECIAL = "https://theandroidmaster.github.io/images/rocket/snowbg.png";
+
+    private static final String CLOUD = "https://theandroidmaster.github.io/images/rocket/cloud.png";
+    private static final String CLOUD_SAND = "https://theandroidmaster.github.io/images/rocket/sandcloud.png";
+    private static final String CLOUD_SPACE = "https://theandroidmaster.github.io/images/rocket/spacecloud.png";
+
     private GoogleApiClient mGoogleApiClient;
     private View special, easy, mid, hard, extr, dropDown, play;
+    private BgImageView bg;
     private boolean isExpanded;
 
     @Override
@@ -57,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         extr = findViewById(R.id.extr);
         dropDown = findViewById(R.id.dropDown);
         play = findViewById(R.id.play);
+        bg = (BgImageView) findViewById(R.id.bg);
+
+        bg.setSpeed(5);
 
         if (Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER) {
             special.setEnabled(true);
@@ -74,15 +96,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View v) {
                 if (!isExpanded) {
                     if (easy.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.EASY, R.mipmap.rocket3, R.mipmap.rocket, R.mipmap.bg, R.mipmap.cloud);
+                        startGame(PreferenceUtils.LevelIdentifier.EASY, R.mipmap.rocket3, R.mipmap.rocket, BACKGROUND, CLOUD);
                     else if (mid.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.MEDIUM, R.mipmap.rocket4, R.mipmap.rocket2, R.mipmap.sandbg, R.mipmap.sandcloud);
+                        startGame(PreferenceUtils.LevelIdentifier.MEDIUM, R.mipmap.rocket4, R.mipmap.rocket2, BACKGROUND_SAND, CLOUD_SAND);
                     else if (hard.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.HARD, R.mipmap.sunnyrocket, R.mipmap.rocket3, R.mipmap.sunnybg, R.mipmap.cloud);
+                        startGame(PreferenceUtils.LevelIdentifier.HARD, R.mipmap.sunnyrocket, R.mipmap.rocket3, BACKGROUND_SUNNY, CLOUD);
                     else if (extr.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.EXTREME, R.mipmap.spacerocket, R.mipmap.meteor, R.mipmap.spacebg, R.mipmap.spacecloud);
+                        startGame(PreferenceUtils.LevelIdentifier.EXTREME, R.mipmap.spacerocket, R.mipmap.meteor, BACKGROUND_SPACE, CLOUD_SPACE);
                     else if (special.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.SPECIAL, R.mipmap.sled, R.mipmap.snowball, R.mipmap.snowbg, R.mipmap.cloud);
+                        startGame(PreferenceUtils.LevelIdentifier.SPECIAL, R.mipmap.sled, R.mipmap.snowball, BACKGROUND_SPECIAL, CLOUD);
                 }
             }
         });
@@ -115,12 +137,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
-        BgImageView imageView = (BgImageView) findViewById(R.id.bg);
-        imageView.setBackground(((BitmapDrawable) ContextCompat.getDrawable(this, R.mipmap.spacebg)).getBitmap());
-        imageView.setSpeed(5);
+        setBackground(BACKGROUND);
     }
 
-    public void startGame(PreferenceUtils.LevelIdentifier level, int rocket, int projectile, int background, int cloud) {
+    public void startGame(PreferenceUtils.LevelIdentifier level, int rocket, int projectile, String background, String cloud) {
         Intent i = new Intent(MainActivity.this, FlappyActivity.class);
         i.putExtra(FlappyActivity.EXTRA_LEVEL, level);
         i.putExtra(FlappyActivity.EXTRA_ROCKET, rocket);
@@ -222,10 +242,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onClick(View v) {
         if (isExpanded) {
             if (v != special) special.setVisibility(View.GONE);
+            else setBackground(BACKGROUND_SPECIAL);
             if (v != easy) easy.setVisibility(View.GONE);
+            else setBackground(BACKGROUND);
             if (v != mid) mid.setVisibility(View.GONE);
+            else setBackground(BACKGROUND_SAND);
             if (v != hard) hard.setVisibility(View.GONE);
+            else setBackground(BACKGROUND_SUNNY);
             if (v != extr) extr.setVisibility(View.GONE);
+            else setBackground(BACKGROUND_SPACE);
         } else {
             if (special.isEnabled())
                 special.setVisibility(View.VISIBLE);
@@ -238,5 +263,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         isExpanded = !isExpanded;
         play.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
         dropDown.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+    }
+
+    private void setBackground(String background) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        Glide.with(this).load(background).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, metrics.heightPixels) {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                bg.setBackground(resource);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !bg.hasBackground()) {
+                    int cx = bg.getWidth() / 2;
+                    int cy = bg.getHeight() / 2;
+
+                    Animator animator = ViewAnimationUtils.createCircularReveal(bg, cx, cy, 0, (float) Math.hypot(cx, cy));
+                    animator.setDuration(1000);
+                    animator.start();
+                } else {
+                    bg.setAlpha(0f);
+                    bg.animate().alpha(1).start();
+                }
+            }
+        });
     }
 }

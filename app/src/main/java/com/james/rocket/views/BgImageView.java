@@ -36,10 +36,18 @@ public class BgImageView extends ImageView {
         measure();
     }
 
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+        setBackground(bm);
+    }
+
     public void setBackground(Bitmap background) {
         this.background = background;
         measure();
-        invalidate();
+    }
+
+    public boolean hasBackground() {
+        return background != null;
     }
 
     public void setCloud(Bitmap cloud) {
@@ -54,25 +62,41 @@ public class BgImageView extends ImageView {
         c1 = 20;
         c2 = 50;
 
-        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                getViewTreeObserver().removeOnPreDrawListener(this);
-                width = getWidth();
-                int height = getHeight();
+        if (background != null && getWidth() > 0 && getHeight() > 0) {
+            width = getWidth();
+            int height = getHeight();
 
+            if (background != null && width > 0 && height > 0) {
                 lefty = width - background.getWidth();
 
                 w = (height * background.getWidth()) / background.getHeight();
                 background = Bitmap.createScaledBitmap(background, w, height, true);
-                invalidate();
-                return true;
             }
-        });
+        } else {
+            getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    width = getWidth();
+                    int height = getHeight();
+
+                    if (background != null && width > 0 && height > 0) {
+                        lefty = width - background.getWidth();
+
+                        w = (height * background.getWidth()) / background.getHeight();
+                        background = Bitmap.createScaledBitmap(background, w, height, true);
+
+                        getViewTreeObserver().removeOnPreDrawListener(this);
+                    }
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
+        if (background == null) return;
+
         if (lefty < 0) {
             lefty = w;
             Random r = new Random();
@@ -80,10 +104,8 @@ public class BgImageView extends ImageView {
             c1 = r.nextInt(width / 2);
         }
 
-        if (background != null) {
-            canvas.drawBitmap(background, lefty, 0, paint);
-            canvas.drawBitmap(background, lefty - w, 0, paint);
-        }
+        canvas.drawBitmap(background, lefty, 0, paint);
+        canvas.drawBitmap(background, lefty - w, 0, paint);
 
         if (cloud != null) {
             canvas.drawBitmap(cloud, lefty * 2, c1, paint);

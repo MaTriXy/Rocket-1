@@ -2,9 +2,10 @@ package com.james.rocket.activities;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
@@ -20,6 +22,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
@@ -39,20 +45,44 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
     public final static String EXTRA_BACKGROUND = "background";
     public final static String EXTRA_CLOUD = "cloud";
 
+    private TextView text;
+    private ImageView flappy, antiflappy;
+    private BgImageView bg;
+    private View progressBar, game;
 
-    ImageView flappy, antiflappy;
-    BgImageView bg;
-    int counter = 0, multiplier = 1, difficulty = 5000;
-    TextView text;
-    int height = 1000, antiwidth, widthanti;
-    boolean cancelled, cancelled2;
-    PreferenceUtils.LevelIdentifier level;
-    float initial;
-    Drawable antirocket, rocket, background, cloud;
-    Handler handler;
-    DedDialog dedDialog;
+    private int counter = 0, multiplier = 1, difficulty = 5000;
+    private int height = 1000, antiwidth, widthanti;
+    private boolean cancelled, cancelled2;
+    private PreferenceUtils.LevelIdentifier level;
+    private float initial;
+    private Drawable antirocket;
+    private Handler handler;
+    private DedDialog dedDialog;
 
-    GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
+
+    private Thread dedThread = new Thread() {
+        @Override
+        public void run() {
+            while (true) {
+                if (game.isEnabled() && (dedDialog == null || !dedDialog.isShowing()) && counter > 0 && (antiflappy.getY() + (antiflappy.getHeight() / 3) >= flappy.getY() - (flappy.getHeight() / 3) && antiflappy.getY() - (antiflappy.getHeight() / 3) <= flappy.getY() + (flappy.getHeight() / 3)) && (antiflappy.getX() + (antiflappy.getWidth() / 2) >= flappy.getX() - (flappy.getWidth() / 2) && antiflappy.getX() - (antiflappy.getWidth() / 2) <= flappy.getX() + (flappy.getWidth() / 2))) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onFailed(counter);
+                            counter = 0;
+                        }
+                    });
+                }
+
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    return;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +100,11 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         text = (TextView) findViewById(R.id.textView5);
         flappy = (ImageView) findViewById(R.id.imageView);
         antiflappy = (ImageView) findViewById(R.id.antiflappy);
+        bg = (BgImageView) findViewById(R.id.bg);
+        progressBar = findViewById(R.id.progressBar);
+        game = findViewById(R.id.game);
+
+        game.setEnabled(false);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -78,12 +113,8 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
 
         level = (PreferenceUtils.LevelIdentifier) getIntent().getSerializableExtra(EXTRA_LEVEL);
 
-        rocket = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_ROCKET, R.mipmap.rocket3));
+        Drawable rocket = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_ROCKET, R.mipmap.rocket3));
         antirocket = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_PROJECTILE, R.mipmap.rocket));
-        background = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_BACKGROUND, R.mipmap.bg));
-        cloud = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_CLOUD, R.mipmap.cloud));
-
-        bg = (BgImageView) findViewById(R.id.bg);
 
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
@@ -121,77 +152,14 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         antiflappy.setImageDrawable(antirocket);
         antiflappy.setRotation(180);
 
-        bg.setBackground(((BitmapDrawable) background).getBitmap());
-        bg.setCloud(((BitmapDrawable) cloud).getBitmap());
-
-        findViewById(R.id.click).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    counter++;
-                    flappy.animate().y(0).rotationBy(-17 - (flappy.getRotation()/3)).setDuration(difficulty / (((counter * 10) / (counter + 1)) + 1)).setInterpolator(new DecelerateInterpolator()).setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-                            cancelled = false;
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            if (!cancelled && (dedDialog == null || !dedDialog.isShowing()) && counter > 0) {
-                                onFailed(counter);
-                                counter = 0;
-                            }
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-                            cancelled = true;
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    }).start();
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    flappy.animate().y(height).rotationBy(25 - (flappy.getRotation()/3)).setDuration(difficulty / (((counter * 10) / (counter + 1)) + 1)).setInterpolator(new AccelerateInterpolator()).setListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-                            cancelled2 = false;
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            if (!cancelled2 && (dedDialog == null || !dedDialog.isShowing()) && counter > 0) {
-                                onFailed(counter);
-                                counter = 0;
-                            }
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-                            cancelled2 = true;
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    }).start();
-                }
-                text.setText(String.valueOf(counter));
-                return false;
-            }
-        });
-
         antiwidth = size.x - antiflappy.getWidth();
         widthanti = antiwidth + antiflappy.getWidth();
 
         handler = new Handler();
-        Runnable r = new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (dedDialog == null || !dedDialog.isShowing()) {
+                if (game.isEnabled() && (dedDialog == null || !dedDialog.isShowing())) {
                     Point size = new Point();
                     getWindowManager().getDefaultDisplay().getSize(size);
                     Random r = new Random();
@@ -225,31 +193,158 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                 }
                 handler.postDelayed(this, difficulty);
             }
-        };
-        handler.postDelayed(r, difficulty);
+        }, difficulty);
 
-        new Thread() {
+        Glide.with(this).load(getIntent().getStringExtra(EXTRA_BACKGROUND)).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, height) {
             @Override
-            public void run() {
-                while(true) {
-                    if ((dedDialog == null || !dedDialog.isShowing()) && counter > 0 && (antiflappy.getY() + (antiflappy.getHeight()/3) >= flappy.getY() - (flappy.getHeight()/3) && antiflappy.getY() - (antiflappy.getHeight()/3) <= flappy.getY() + (flappy.getHeight()/3)) && (antiflappy.getX() + (antiflappy.getWidth()/2) >= flappy.getX() - (flappy.getWidth()/2) && antiflappy.getX() - (antiflappy.getWidth()/2) <= flappy.getX() + (flappy.getWidth()/2))) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                onFailed(counter);
-                                counter = 0;
-                            }
-                        });
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                bg.setBackground(resource);
+                dedThread.start();
+
+                progressBar.animate().scaleY(0).scaleX(0).setInterpolator(new AccelerateInterpolator()).setDuration(500).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
                     }
-                    if (isInterrupted()) return;
-                    try {
-                        Thread.sleep(5);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        game.setVisibility(View.VISIBLE);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            int cx = game.getWidth() / 2;
+                            int cy = game.getHeight() / 2;
+
+                            Animator animator = ViewAnimationUtils.createCircularReveal(game, cx, cy, 0, (float) Math.hypot(cx, cy));
+                            animator.setDuration(1000);
+                            animator.addListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    game.setEnabled(true);
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+
+                                }
+                            });
+                            animator.start();
+                        } else {
+                            game.setAlpha(0);
+                            game.animate().alpha(1).setListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    game.setEnabled(true);
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+
+                                }
+                            }).start();
+                        }
                     }
-                }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }).start();
             }
-        }.start();
+        });
+
+        Glide.with(this).load(getIntent().getStringExtra(EXTRA_CLOUD)).asBitmap().into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                bg.setCloud(resource);
+            }
+        });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (game.isEnabled()) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                counter++;
+                flappy.animate().y(0).rotationBy(-17 - (flappy.getRotation() / 3)).setDuration(difficulty / (((counter * 10) / (counter + 1)) + 1)).setInterpolator(new DecelerateInterpolator()).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        cancelled = false;
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        if (!cancelled && (dedDialog == null || !dedDialog.isShowing()) && counter > 0) {
+                            onFailed(counter);
+                            counter = 0;
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+                        cancelled = true;
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                }).start();
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                flappy.animate().y(height).rotationBy(25 - (flappy.getRotation() / 3)).setDuration(difficulty / (((counter * 10) / (counter + 1)) + 1)).setInterpolator(new AccelerateInterpolator()).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+                        cancelled2 = false;
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+                        if (!cancelled2 && (dedDialog == null || !dedDialog.isShowing()) && counter > 0) {
+                            onFailed(counter);
+                            counter = 0;
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+                        cancelled2 = true;
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                }).start();
+            }
+
+            text.setText(String.valueOf(counter));
+        }
+
+        return super.dispatchTouchEvent(event);
     }
 
     public void onFailed(final int counter) {
@@ -316,7 +411,10 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                         }
                     });
 
-            dedDialog.show();
+            try {
+                dedDialog.show();
+            } catch (WindowManager.BadTokenException ignored) {
+            }
         }
     }
 
