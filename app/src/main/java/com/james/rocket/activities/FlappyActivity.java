@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
@@ -195,10 +194,11 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
             }
         }, difficulty);
 
-        Glide.with(this).load(getIntent().getStringExtra(EXTRA_BACKGROUND)).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, height) {
+        Glide.with(this).load(getIntent().getStringExtra(EXTRA_BACKGROUND)).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                bg.setBackground(resource);
+                int scaledHeight = (resource.getHeight() + height) / 2;
+                bg.setBackground(Bitmap.createScaledBitmap(resource, (int) (scaledHeight * ((double) resource.getWidth() / resource.getHeight())), scaledHeight, false));
                 dedThread.start();
 
                 progressBar.animate().scaleY(0).scaleX(0).setInterpolator(new AccelerateInterpolator()).setDuration(500).setListener(new Animator.AnimatorListener() {

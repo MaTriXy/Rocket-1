@@ -1,6 +1,5 @@
 package com.james.rocket.activities;
 
-import android.animation.Animator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -22,7 +21,6 @@ import android.view.ViewAnimationUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
@@ -266,24 +264,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void setBackground(String background) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        Glide.with(this).load(background).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, metrics.heightPixels) {
+        Glide.with(this).load(background).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                bg.setBackground(resource);
+                DisplayMetrics metrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !bg.hasBackground()) {
                     int cx = bg.getWidth() / 2;
                     int cy = bg.getHeight() / 2;
 
-                    Animator animator = ViewAnimationUtils.createCircularReveal(bg, cx, cy, 0, (float) Math.hypot(cx, cy));
-                    animator.setDuration(1000);
-                    animator.start();
-                } else {
-                    bg.setAlpha(0f);
-                    bg.animate().alpha(1).start();
+                    ViewAnimationUtils.createCircularReveal(bg, cx, cy, 0, (float) Math.hypot(cx, cy)).setDuration(1000).start();
                 }
+
+                int height = (resource.getHeight() + metrics.heightPixels) / 2;
+                bg.setBackground(Bitmap.createScaledBitmap(resource, (int) (height * ((double) resource.getWidth() / resource.getHeight())), height, false));
             }
         });
     }
