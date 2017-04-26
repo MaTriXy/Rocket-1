@@ -7,20 +7,20 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 
 dependencies {
     // Set defaults so that BaseGameUtils can be used outside of BasicSamples
     if (!project.hasProperty('appcompat_library_version')) {
-        ext.appcompat_library_version = '25.1.0'
+        ext.appcompat_library_version = '25.3.1'
     }
     if (!project.hasProperty('support_library_version')) {
-        ext.support_library_version = '25.1.0'
+        ext.support_library_version = '25.3.1'
     }
     if (!project.hasProperty('gms_library_version')) {
-        ext.gms_library_version = '10.0.1'
+        ext.gms_library_version = '10.2.1'
     }
 
     compile "com.android.support:appcompat-v7:${appcompat_library_version}"
