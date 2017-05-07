@@ -15,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
@@ -25,13 +26,16 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
+import com.james.rocket.BuildConfig;
 import com.james.rocket.R;
 import com.james.rocket.dialogs.DedDialog;
 import com.james.rocket.utils.PreferenceUtils;
+import com.james.rocket.utils.StaticUtils;
 import com.james.rocket.views.BgImageView;
 
 import java.util.Random;
@@ -90,11 +94,13 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_flappy);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
+        if (!BuildConfig.DEBUG) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                    .build();
+        }
 
         text = (TextView) findViewById(R.id.textView5);
         flappy = (ImageView) findViewById(R.id.imageView);
@@ -194,11 +200,10 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
             }
         }, difficulty);
 
-        Glide.with(this).load(getIntent().getStringExtra(EXTRA_BACKGROUND)).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>() {
+        Glide.with(this).load(getIntent().getIntExtra(EXTRA_BACKGROUND, R.mipmap.bg)).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, height) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                int scaledHeight = (resource.getHeight() + height) / 2;
-                bg.setBackground(Bitmap.createScaledBitmap(resource, (int) (scaledHeight * ((double) resource.getWidth() / resource.getHeight())), scaledHeight, false));
+                bg.setBackground(resource);
                 dedThread.start();
 
                 progressBar.animate().scaleY(0).scaleX(0).setInterpolator(new AccelerateInterpolator()).setDuration(500).setListener(new Animator.AnimatorListener() {
@@ -214,30 +219,68 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                             int cx = game.getWidth() / 2;
                             int cy = game.getHeight() / 2;
 
-                            Animator animator = ViewAnimationUtils.createCircularReveal(game, cx, cy, 0, (float) Math.hypot(cx, cy));
-                            animator.setDuration(1000);
-                            animator.addListener(new Animator.AnimatorListener() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {
+                            if (cx == 0 || cy == 0) {
+                                game.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                                    @Override
+                                    public void onGlobalLayout() {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                            int cx = game.getWidth() / 2;
+                                            int cy = game.getHeight() / 2;
 
-                                }
+                                            Animator animator = ViewAnimationUtils.createCircularReveal(game, cx, cy, 0, (float) Math.hypot(cx, cy));
+                                            animator.setDuration(1000);
+                                            animator.addListener(new Animator.AnimatorListener() {
+                                                @Override
+                                                public void onAnimationStart(Animator animation) {
 
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    game.setEnabled(true);
-                                }
+                                                }
 
-                                @Override
-                                public void onAnimationCancel(Animator animation) {
+                                                @Override
+                                                public void onAnimationEnd(Animator animation) {
+                                                    game.setEnabled(true);
+                                                }
 
-                                }
+                                                @Override
+                                                public void onAnimationCancel(Animator animation) {
 
-                                @Override
-                                public void onAnimationRepeat(Animator animation) {
+                                                }
 
-                                }
-                            });
-                            animator.start();
+                                                @Override
+                                                public void onAnimationRepeat(Animator animation) {
+
+                                                }
+                                            });
+                                            animator.start();
+                                        }
+                                        game.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                    }
+                                });
+                            } else {
+                                Animator animator = ViewAnimationUtils.createCircularReveal(game, cx, cy, 0, (float) Math.hypot(cx, cy));
+                                animator.setDuration(1000);
+                                animator.addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        game.setEnabled(true);
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animation) {
+
+                                    }
+                                });
+                                animator.start();
+                            }
                         } else {
                             game.setAlpha(0);
                             game.animate().alpha(1).setListener(new Animator.AnimatorListener() {
@@ -277,7 +320,7 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        Glide.with(this).load(getIntent().getStringExtra(EXTRA_CLOUD)).asBitmap().into(new SimpleTarget<Bitmap>() {
+        Glide.with(this).load(getIntent().getIntExtra(EXTRA_CLOUD, R.mipmap.cloud)).asBitmap().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, (int) StaticUtils.getPixelsFromDp(this, 100)) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 bg.setCloud(resource);
@@ -363,7 +406,7 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
             highScore = score;
             PreferenceUtils.putScore(this, level, PreferenceUtils.PreferenceIdentifier.HIGH_SCORE, score);
 
-            if (mGoogleApiClient.isConnected()) {
+            if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                 //leaderboards
                 Games.Leaderboards.submitScore(mGoogleApiClient, "CgkIxoaQv_8CEAIQCQ", score);
 
@@ -469,20 +512,22 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.disconnect();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == RC_SIGN_IN) {
             mSignInClicked = false;
             mResolvingConnectionFailure = false;
-            if (resultCode == RESULT_OK) {
+            if (mGoogleApiClient != null && resultCode == RESULT_OK) {
                 mGoogleApiClient.connect();
             } else {
                 BaseGameUtils.showActivityResultError(this, requestCode, resultCode, R.string.sign_in_failure);

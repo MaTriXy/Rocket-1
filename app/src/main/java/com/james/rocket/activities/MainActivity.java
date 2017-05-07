@@ -3,28 +3,23 @@ package com.james.rocket.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
+import com.james.rocket.BuildConfig;
 import com.james.rocket.R;
 import com.james.rocket.utils.PreferenceUtils;
 import com.james.rocket.views.BgImageView;
@@ -33,18 +28,18 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    private static final String BACKGROUND = "https://theandroidmaster.github.io/images/rocket/bg.png";
-    private static final String BACKGROUND_SAND = "https://theandroidmaster.github.io/images/rocket/sandbg.png";
-    private static final String BACKGROUND_SUNNY = "https://theandroidmaster.github.io/images/rocket/sunnybg.png";
-    private static final String BACKGROUND_SPACE = "https://theandroidmaster.github.io/images/rocket/spacebg.png";
-    private static final String BACKGROUND_SPECIAL = "https://theandroidmaster.github.io/images/rocket/snowbg.png";
+    private static final int BACKGROUND = R.mipmap.bg;
+    private static final int BACKGROUND_SAND = R.mipmap.sandbg;
+    private static final int BACKGROUND_SUNNY = R.mipmap.sunnybg;
+    private static final int BACKGROUND_SPACE = R.mipmap.spacebg;
+    private static final int BACKGROUND_SPECIAL = R.mipmap.snowbg;
 
-    private static final String CLOUD = "https://theandroidmaster.github.io/images/rocket/cloud.png";
-    private static final String CLOUD_SAND = "https://theandroidmaster.github.io/images/rocket/sandcloud.png";
-    private static final String CLOUD_SPACE = "https://theandroidmaster.github.io/images/rocket/spacecloud.png";
+    private static final int CLOUD = R.mipmap.cloud;
+    private static final int CLOUD_SAND = R.mipmap.sandcloud;
+    private static final int CLOUD_SPACE = R.mipmap.spacecloud;
 
     private GoogleApiClient mGoogleApiClient;
-    private View special, easy, mid, hard, extr, dropDown, play;
+    private View special, easy, mid, hard, extr, dropDown, buttonLayout;
     private BgImageView bg;
     private boolean isExpanded;
 
@@ -59,13 +54,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             startActivity(new Intent(MainActivity.this, TutorialActivity.class));
         }
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
-
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        if (!BuildConfig.DEBUG) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                    .build();
+        }
 
         special = findViewById(R.id.special);
         easy = findViewById(R.id.easy);
@@ -73,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         hard = findViewById(R.id.hard);
         extr = findViewById(R.id.extr);
         dropDown = findViewById(R.id.dropDown);
-        play = findViewById(R.id.play);
+        buttonLayout = findViewById(R.id.buttonLayout);
         bg = (BgImageView) findViewById(R.id.bg);
 
         bg.setSpeed(5);
@@ -89,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         extr.setOnClickListener(this);
         dropDown.setOnClickListener(this);
 
-        play.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isExpanded) {
@@ -107,6 +102,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         });
 
+        findViewById(R.id.settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, OptionsActivity.class));
+            }
+        });
+
         findViewById(R.id.progress).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,14 +119,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         findViewById(R.id.scoreboard).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mGoogleApiClient.isConnected()) startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, "CgkIxoaQv_8CEAIQCQ"), 5001);
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+                    startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, "CgkIxoaQv_8CEAIQCQ"), 5001);
             }
         });
 
         findViewById(R.id.achv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mGoogleApiClient.isConnected()) startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 5001);
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+                    startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), 5001);
             }
         });
 
@@ -138,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setBackground(BACKGROUND);
     }
 
-    public void startGame(PreferenceUtils.LevelIdentifier level, int rocket, int projectile, String background, String cloud) {
+    public void startGame(PreferenceUtils.LevelIdentifier level, int rocket, int projectile, int background, int cloud) {
         Intent i = new Intent(MainActivity.this, FlappyActivity.class);
         i.putExtra(FlappyActivity.EXTRA_LEVEL, level);
         i.putExtra(FlappyActivity.EXTRA_ROCKET, rocket);
@@ -149,32 +153,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        Drawable settings = ContextCompat.getDrawable(this, R.drawable.ic_settings);
-        DrawableCompat.setTint(settings, Color.WHITE);
-        menu.findItem(R.id.action_settings).setIcon(settings);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, OptionsActivity.class));
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onConnected(Bundle bundle) {
         findViewById(R.id.achv).setVisibility(View.VISIBLE);
         findViewById(R.id.scoreboard).setVisibility(View.VISIBLE);
         findViewById(R.id.signin).setVisibility(View.GONE);
 
         //launch the game 100 times to unlock
-        Games.Achievements.increment(mGoogleApiClient, "CgkIxoaQv_8CEAIQBA", 1);
+        if (mGoogleApiClient != null)
+            Games.Achievements.increment(mGoogleApiClient, "CgkIxoaQv_8CEAIQBA", 1);
     }
 
     private static int RC_SIGN_IN = 9001;
@@ -189,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return;
         }
 
-        if (mSignInClicked || mAutoStartSignInflow) {
+        if (mGoogleApiClient != null && (mSignInClicked || mAutoStartSignInflow)) {
             mSignInClicked = false;
             mAutoStartSignInflow = false;
 
@@ -205,26 +191,29 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnectionSuspended(int i) {
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mGoogleApiClient.disconnect();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.disconnect();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == RC_SIGN_IN) {
             mSignInClicked = false;
             mResolvingConnectionFailure = false;
-            if (resultCode == RESULT_OK)
+            if (mGoogleApiClient != null && resultCode == RESULT_OK)
                 mGoogleApiClient.connect();
             else
                 BaseGameUtils.showActivityResultError(this, requestCode, resultCode, R.string.sign_in_failure);
@@ -233,7 +222,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private void signInClicked() {
         mSignInClicked = true;
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
     }
 
     @Override
@@ -259,17 +249,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         isExpanded = !isExpanded;
-        play.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
+        buttonLayout.animate().alpha(isExpanded ? 0 : 1).setDuration(isExpanded ? 50 : 500).setStartDelay(isExpanded ? 0 : 1000).start();
         dropDown.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
     }
 
-    private void setBackground(String background) {
-        Glide.with(this).load(background).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>() {
+    private void setBackground(int background) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        Glide.with(this).load(background).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, metrics.heightPixels) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                DisplayMetrics metrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !bg.hasBackground()) {
                     int cx = bg.getWidth() / 2;
                     int cy = bg.getHeight() / 2;
@@ -277,8 +267,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     ViewAnimationUtils.createCircularReveal(bg, cx, cy, 0, (float) Math.hypot(cx, cy)).setDuration(1000).start();
                 }
 
-                int height = (resource.getHeight() + metrics.heightPixels) / 2;
-                bg.setBackground(Bitmap.createScaledBitmap(resource, (int) (height * ((double) resource.getWidth() / resource.getHeight())), height, false));
+                bg.setBackground(resource);
             }
         });
     }
