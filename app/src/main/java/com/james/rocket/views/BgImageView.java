@@ -5,12 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 
 import java.util.Random;
 
-public class BgImageView extends ImageView {
+public class BgImageView extends View {
 
     private Bitmap background, cloud;
     private int lefty = 0, width, w, c1, c2, interval = 5;
@@ -36,7 +36,6 @@ public class BgImageView extends ImageView {
         measure();
     }
 
-    @Override
     public void setImageBitmap(Bitmap bm) {
         setBackground(bm);
     }
@@ -94,7 +93,7 @@ public class BgImageView extends ImageView {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    protected void onDraw(Canvas canvas) {
         if (background == null) return;
 
         if (lefty < 0) {

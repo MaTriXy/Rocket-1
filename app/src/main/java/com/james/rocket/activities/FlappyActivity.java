@@ -33,6 +33,7 @@ import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.james.rocket.BuildConfig;
 import com.james.rocket.R;
+import com.james.rocket.data.LevelData;
 import com.james.rocket.dialogs.DedDialog;
 import com.james.rocket.utils.PreferenceUtils;
 import com.james.rocket.utils.StaticUtils;
@@ -43,20 +44,15 @@ import java.util.Random;
 public class FlappyActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     public final static String EXTRA_LEVEL = "level";
-    public final static String EXTRA_ROCKET = "rocket";
-    public final static String EXTRA_PROJECTILE = "projectile";
-    public final static String EXTRA_BACKGROUND = "background";
-    public final static String EXTRA_CLOUD = "cloud";
-
     private TextView text;
     private ImageView flappy, antiflappy;
     private BgImageView bg;
     private View progressBar, game;
 
-    private int counter = 0, multiplier = 1, difficulty = 5000;
+    private int counter = 0;
     private int height = 1000, antiwidth, widthanti;
     private boolean cancelled, cancelled2;
-    private PreferenceUtils.LevelIdentifier level;
+    private LevelData level;
     private float initial;
     private Drawable antirocket;
     private Handler handler;
@@ -94,6 +90,8 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_flappy);
 
+        level = getIntent().getParcelableExtra(EXTRA_LEVEL);
+
         if (!BuildConfig.DEBUG) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -116,42 +114,14 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         height = metrics.heightPixels;
         initial = height / 2;
 
-        level = (PreferenceUtils.LevelIdentifier) getIntent().getSerializableExtra(EXTRA_LEVEL);
-
-        Drawable rocket = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_ROCKET, R.mipmap.rocket3));
-        antirocket = ContextCompat.getDrawable(this, getIntent().getIntExtra(EXTRA_PROJECTILE, R.mipmap.rocket));
+        Drawable rocket = ContextCompat.getDrawable(this, level.getRocket());
+        antirocket = ContextCompat.getDrawable(this, level.getAntiRocket());
 
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
         antiflappy.setX(size.x + antiflappy.getWidth());
 
-        switch (level) {
-            case EASY:
-                bg.setSpeed(5);
-                multiplier = 1;
-                difficulty = 5000;
-                break;
-            case MEDIUM:
-                bg.setSpeed(10);
-                multiplier = 2;
-                difficulty = 3500;
-                break;
-            case HARD:
-                bg.setSpeed(15);
-                multiplier = 3;
-                difficulty = 2000;
-                break;
-            case EXTREME:
-                bg.setSpeed(20);
-                multiplier = 5;
-                difficulty = 1000;
-                break;
-            case SPECIAL:
-                bg.setSpeed(10);
-                multiplier = 2;
-                difficulty = 3500;
-                break;
-        }
+        bg.setSpeed(level.getSpeed());
 
         flappy.setImageDrawable(rocket);
         antiflappy.setImageDrawable(antirocket);
@@ -179,7 +149,7 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(difficulty / 3);
+                                Thread.sleep(level.getDifficulty() / 3);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
@@ -190,17 +160,17 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                                     antiflappy.setScaleType(ImageView.ScaleType.FIT_CENTER);
                                     antiflappy.setImageDrawable(antirocket);
                                     antiflappy.setScaleY(1);
-                                    antiflappy.animate().x(antiflappy.getWidth()*-1).setDuration(difficulty / 2).start();
+                                    antiflappy.animate().x(antiflappy.getWidth() * -1).setDuration(level.getDifficulty() / 2).start();
                                 }
                             });
                         }
                     }.start();
                 }
-                handler.postDelayed(this, difficulty);
+                handler.postDelayed(this, level.getDifficulty());
             }
-        }, difficulty);
+        }, level.getDifficulty());
 
-        Glide.with(this).load(getIntent().getIntExtra(EXTRA_BACKGROUND, R.mipmap.bg)).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, height) {
+        Glide.with(this).load(level.getBackground()).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, height) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 bg.setBackground(resource);
@@ -320,7 +290,7 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        Glide.with(this).load(getIntent().getIntExtra(EXTRA_CLOUD, R.mipmap.cloud)).asBitmap().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, (int) StaticUtils.getPixelsFromDp(this, 100)) {
+        Glide.with(this).load(level.getCloud()).asBitmap().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, (int) StaticUtils.getPixelsFromDp(this, 100)) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 bg.setCloud(resource);
@@ -333,7 +303,7 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         if (game.isEnabled()) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 counter++;
-                flappy.animate().y(0).rotationBy(-17 - (flappy.getRotation() / 3)).setDuration(difficulty / (((counter * 10) / (counter + 1)) + 1)).setInterpolator(new DecelerateInterpolator()).setListener(new Animator.AnimatorListener() {
+                flappy.animate().y(0).rotationBy(-17 - (flappy.getRotation() / 3)).setDuration(level.getDifficulty() / (((counter * 10) / (counter + 1)) + 1)).setInterpolator(new DecelerateInterpolator()).setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animator) {
                         cancelled = false;
@@ -358,7 +328,7 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                     }
                 }).start();
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                flappy.animate().y(height).rotationBy(25 - (flappy.getRotation() / 3)).setDuration(difficulty / (((counter * 10) / (counter + 1)) + 1)).setInterpolator(new AccelerateInterpolator()).setListener(new Animator.AnimatorListener() {
+                flappy.animate().y(height).rotationBy(25 - (flappy.getRotation() / 3)).setDuration(level.getDifficulty() / (((counter * 10) / (counter + 1)) + 1)).setInterpolator(new AccelerateInterpolator()).setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animator) {
                         cancelled2 = false;
@@ -396,21 +366,21 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         flappy.setRotation(0.0f);
         text.setText(R.string.action_start);
 
-        Integer totalScore = PreferenceUtils.getScore(this, level, PreferenceUtils.PreferenceIdentifier.TOTAL_ATTEMPTS);
-        PreferenceUtils.putScore(this, level, PreferenceUtils.PreferenceIdentifier.TOTAL_ATTEMPTS, totalScore == null ? 1 : totalScore + 1);
+        Integer totalScore = PreferenceUtils.getScore(this, level.getIdentifier(), PreferenceUtils.PreferenceIdentifier.TOTAL_ATTEMPTS);
+        PreferenceUtils.putScore(this, level.getIdentifier(), PreferenceUtils.PreferenceIdentifier.TOTAL_ATTEMPTS, totalScore == null ? 1 : totalScore + 1);
 
-        Integer highScore = PreferenceUtils.getScore(this, level, PreferenceUtils.PreferenceIdentifier.HIGH_SCORE);
-        int score = counter * multiplier;
+        Integer highScore = PreferenceUtils.getScore(this, level.getIdentifier(), PreferenceUtils.PreferenceIdentifier.HIGH_SCORE);
+        int score = counter * level.getMultiplier();
 
         if (highScore == null || score > highScore) {
             highScore = score;
-            PreferenceUtils.putScore(this, level, PreferenceUtils.PreferenceIdentifier.HIGH_SCORE, score);
+            PreferenceUtils.putScore(this, level.getIdentifier(), PreferenceUtils.PreferenceIdentifier.HIGH_SCORE, score);
 
             if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
                 //leaderboards
                 Games.Leaderboards.submitScore(mGoogleApiClient, "CgkIxoaQv_8CEAIQCQ", score);
 
-                if (level == PreferenceUtils.LevelIdentifier.EXTREME && highScore >= 50) {
+                if (level.getIdentifier().equals(PreferenceUtils.LEVELS[4].getIdentifier()) && highScore >= 50) {
                     //ninja
                     Games.Achievements.unlock(mGoogleApiClient, "CgkIxoaQv_8CEAIQBg");
                     if (highScore >= 100) {
@@ -419,7 +389,7 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
                     }
                 }
                 //spammer
-                else if (level == PreferenceUtils.LevelIdentifier.EASY && highScore >= 1000) {
+                else if (level.getIdentifier().equals(PreferenceUtils.LEVELS[1]) && highScore >= 1000) {
                     Games.Achievements.unlock(mGoogleApiClient, "CgkIxoaQv_8CEAIQCA");
                 }
                 //t-100

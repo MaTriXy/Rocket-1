@@ -19,8 +19,8 @@
     <string name="normal_score">Your high score is %1$d.</string>
 
     <string name="total_attempts">Attempts: %1$d</string>
-    <string name="total_high_score">High Score:</string>
-    <string name="total_skill">Skill Ratio:</string>
+    <string name="total_high_score">High Score: %1$d</string>
+    <string name="total_skill">Skill Ratio: %1$d</string>
 
     <string name="value_low">Low</string>
     <string name="value_high">High</string>

@@ -1,9 +1,10 @@
 package com.james.rocket.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+
+import com.james.rocket.R;
+import com.james.rocket.data.LevelData;
 
 public class PreferenceUtils {
 
@@ -11,18 +12,19 @@ public class PreferenceUtils {
         HIGH_SCORE, TOTAL_ATTEMPTS
     }
 
-    public enum LevelIdentifier {
-        EASY, MEDIUM, HARD, EXTREME, SPECIAL
+    public static final LevelData[] LEVELS = new LevelData[]{
+            new LevelData(10, 2, 3500, R.mipmap.sled, R.mipmap.snowball, R.mipmap.snowbg, R.mipmap.cloud, "Special"),
+            new LevelData(5, 1, 5000, R.mipmap.rocket3, R.mipmap.rocket, R.mipmap.bg, R.mipmap.cloud, "Easy"),
+            new LevelData(10, 2, 3500, R.mipmap.rocket4, R.mipmap.rocket2, R.mipmap.sandbg, R.mipmap.sandcloud, "Medium"),
+            new LevelData(15, 3, 2000, R.mipmap.sunnyrocket, R.mipmap.rocket3, R.mipmap.sunnybg, R.mipmap.cloud, "Hard"),
+            new LevelData(20, 5, 1000, R.mipmap.spacerocket, R.mipmap.meteor, R.mipmap.spacebg, R.mipmap.spacecloud, "Extreme")
+    };
+
+    public static void putScore(Context context, String id, PreferenceIdentifier identifier, int integer) {
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(id + identifier.toString(), integer).apply();
     }
 
-    public static void putScore(Context context, LevelIdentifier level, PreferenceIdentifier identifier, int integer) {
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(level.toString() + identifier.toString(), integer).apply();
-    }
-
-    @Nullable
-    public static Integer getScore(Context context, LevelIdentifier level, PreferenceIdentifier identifier) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.contains(level.toString() + identifier.toString())) return prefs.getInt(level.toString() + identifier.toString(), 0);
-        else return null;
+    public static int getScore(Context context, String id, PreferenceIdentifier identifier) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(id + identifier.toString(), 0);
     }
 }

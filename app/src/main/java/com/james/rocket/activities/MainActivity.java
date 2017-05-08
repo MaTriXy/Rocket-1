@@ -2,51 +2,41 @@ package com.james.rocket.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.james.rocket.BuildConfig;
 import com.james.rocket.R;
+import com.james.rocket.adapters.BasePagerAdapter;
+import com.james.rocket.fragments.LevelFragment;
 import com.james.rocket.utils.PreferenceUtils;
-import com.james.rocket.views.BgImageView;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
-
-    private static final int BACKGROUND = R.mipmap.bg;
-    private static final int BACKGROUND_SAND = R.mipmap.sandbg;
-    private static final int BACKGROUND_SUNNY = R.mipmap.sunnybg;
-    private static final int BACKGROUND_SPACE = R.mipmap.spacebg;
-    private static final int BACKGROUND_SPECIAL = R.mipmap.snowbg;
-
-    private static final int CLOUD = R.mipmap.cloud;
-    private static final int CLOUD_SAND = R.mipmap.sandcloud;
-    private static final int CLOUD_SPACE = R.mipmap.spacecloud;
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ViewPager.PageTransformer {
 
     private GoogleApiClient mGoogleApiClient;
-    private View special, easy, mid, hard, extr, dropDown, buttonLayout;
-    private BgImageView bg;
-    private boolean isExpanded;
+    private ViewPager viewPager;
+    private BasePagerAdapter adapter;
+    private FloatingActionButton play;
+
+    private boolean isDecember;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        play = (FloatingActionButton) findViewById(R.id.play);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.getBoolean("installed", false)) {
@@ -62,43 +52,57 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     .build();
         }
 
-        special = findViewById(R.id.special);
-        easy = findViewById(R.id.easy);
-        mid = findViewById(R.id.mid);
-        hard = findViewById(R.id.hard);
-        extr = findViewById(R.id.extr);
-        dropDown = findViewById(R.id.dropDown);
-        buttonLayout = findViewById(R.id.buttonLayout);
-        bg = (BgImageView) findViewById(R.id.bg);
+        isDecember = BuildConfig.DEBUG || Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER;
+        LevelFragment[] fragments = new LevelFragment[isDecember ? 5 : 4];
 
-        bg.setSpeed(5);
+        int counter = 0;
 
-        if (Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER) {
-            special.setEnabled(true);
-            special.setOnClickListener(this);
+        if (isDecember) {
+            Bundle args = new Bundle();
+            args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[0]);
+
+            fragments[counter] = new LevelFragment();
+            fragments[counter].setArguments(args);
+            counter++;
         }
 
-        easy.setOnClickListener(this);
-        mid.setOnClickListener(this);
-        hard.setOnClickListener(this);
-        extr.setOnClickListener(this);
-        dropDown.setOnClickListener(this);
+        Bundle args = new Bundle();
+        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[1]);
 
-        findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
+        fragments[counter] = new LevelFragment();
+        fragments[counter].setArguments(args);
+        counter++;
+
+        args = new Bundle();
+        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[2]);
+
+        fragments[counter] = new LevelFragment();
+        fragments[counter].setArguments(args);
+        counter++;
+
+        args = new Bundle();
+        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[3]);
+
+        fragments[counter] = new LevelFragment();
+        fragments[counter].setArguments(args);
+        counter++;
+
+        args = new Bundle();
+        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[4]);
+
+        fragments[counter] = new LevelFragment();
+        fragments[counter].setArguments(args);
+
+        adapter = new BasePagerAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(adapter);
+        viewPager.setPageTransformer(false, this);
+
+        play.show();
+        play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isExpanded) {
-                    if (easy.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.EASY, R.mipmap.rocket3, R.mipmap.rocket, BACKGROUND, CLOUD);
-                    else if (mid.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.MEDIUM, R.mipmap.rocket4, R.mipmap.rocket2, BACKGROUND_SAND, CLOUD_SAND);
-                    else if (hard.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.HARD, R.mipmap.sunnyrocket, R.mipmap.rocket3, BACKGROUND_SUNNY, CLOUD);
-                    else if (extr.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.EXTREME, R.mipmap.spacerocket, R.mipmap.meteor, BACKGROUND_SPACE, CLOUD_SPACE);
-                    else if (special.getVisibility() == View.VISIBLE)
-                        startGame(PreferenceUtils.LevelIdentifier.SPECIAL, R.mipmap.sled, R.mipmap.snowball, BACKGROUND_SPECIAL, CLOUD);
-                }
+                startGame(isDecember ? viewPager.getCurrentItem() : viewPager.getCurrentItem() + 1);
             }
         });
 
@@ -112,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         findViewById(R.id.progress).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProgressActivity.class));
+                //startActivity(new Intent(MainActivity.this, ProgressActivity.class));
             }
         });
 
@@ -138,17 +142,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 signInClicked();
             }
         });
-
-        setBackground(BACKGROUND);
     }
 
-    public void startGame(PreferenceUtils.LevelIdentifier level, int rocket, int projectile, int background, int cloud) {
+    public void startGame(int level) {
         Intent i = new Intent(MainActivity.this, FlappyActivity.class);
-        i.putExtra(FlappyActivity.EXTRA_LEVEL, level);
-        i.putExtra(FlappyActivity.EXTRA_ROCKET, rocket);
-        i.putExtra(FlappyActivity.EXTRA_PROJECTILE, projectile);
-        i.putExtra(FlappyActivity.EXTRA_BACKGROUND, background);
-        i.putExtra(FlappyActivity.EXTRA_CLOUD, cloud);
+        i.putExtra(FlappyActivity.EXTRA_LEVEL, PreferenceUtils.LEVELS[level]);
         startActivity(i);
     }
 
@@ -227,48 +225,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onClick(View v) {
-        if (isExpanded) {
-            if (v != special) special.setVisibility(View.GONE);
-            else setBackground(BACKGROUND_SPECIAL);
-            if (v != easy) easy.setVisibility(View.GONE);
-            else setBackground(BACKGROUND);
-            if (v != mid) mid.setVisibility(View.GONE);
-            else setBackground(BACKGROUND_SAND);
-            if (v != hard) hard.setVisibility(View.GONE);
-            else setBackground(BACKGROUND_SUNNY);
-            if (v != extr) extr.setVisibility(View.GONE);
-            else setBackground(BACKGROUND_SPACE);
-        } else {
-            if (special.isEnabled())
-                special.setVisibility(View.VISIBLE);
-            easy.setVisibility(View.VISIBLE);
-            mid.setVisibility(View.VISIBLE);
-            hard.setVisibility(View.VISIBLE);
-            extr.setVisibility(View.VISIBLE);
-        }
+    public void transformPage(View page, float position) {
+        View cutout = page.findViewById(R.id.cutout);
+        View imageView = page.findViewById(R.id.imageView);
+        View title = page.findViewById(R.id.title);
+        View score = page.findViewById(R.id.score);
 
-        isExpanded = !isExpanded;
-        buttonLayout.animate().alpha(isExpanded ? 0 : 1).setDuration(isExpanded ? 50 : 500).setStartDelay(isExpanded ? 0 : 1000).start();
-        dropDown.setVisibility(isExpanded ? View.GONE : View.VISIBLE);
-    }
-
-    private void setBackground(int background) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        Glide.with(this).load(background).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, metrics.heightPixels) {
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !bg.hasBackground()) {
-                    int cx = bg.getWidth() / 2;
-                    int cy = bg.getHeight() / 2;
-
-                    ViewAnimationUtils.createCircularReveal(bg, cx, cy, 0, (float) Math.hypot(cx, cy)).setDuration(1000).start();
-                }
-
-                bg.setBackground(resource);
-            }
-        });
+        cutout.setTranslationX(-position * cutout.getWidth());
+        imageView.setTranslationX(-position * cutout.getWidth() / 2);
+        title.setTranslationX(-position * cutout.getWidth() / 4);
+        score.setTranslationX(-position * cutout.getWidth() / 3);
     }
 }
