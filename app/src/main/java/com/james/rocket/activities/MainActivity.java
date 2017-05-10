@@ -16,6 +16,7 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 import com.james.rocket.BuildConfig;
 import com.james.rocket.R;
 import com.james.rocket.adapters.BasePagerAdapter;
+import com.james.rocket.fragments.BaseFragment;
 import com.james.rocket.fragments.LevelFragment;
 import com.james.rocket.utils.PreferenceUtils;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private FloatingActionButton play;
 
     private boolean isDecember;
+    private int currentPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,47 +55,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         isDecember = BuildConfig.DEBUG || Calendar.getInstance().get(Calendar.MONTH) == Calendar.DECEMBER;
-        LevelFragment[] fragments = new LevelFragment[isDecember ? 5 : 4];
 
-        int counter = 0;
-
-        if (isDecember) {
-            Bundle args = new Bundle();
-            args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[0]);
-
-            fragments[counter] = new LevelFragment();
-            fragments[counter].setArguments(args);
-            counter++;
-        }
-
-        Bundle args = new Bundle();
-        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[1]);
-
-        fragments[counter] = new LevelFragment();
-        fragments[counter].setArguments(args);
-        counter++;
-
-        args = new Bundle();
-        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[2]);
-
-        fragments[counter] = new LevelFragment();
-        fragments[counter].setArguments(args);
-        counter++;
-
-        args = new Bundle();
-        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[3]);
-
-        fragments[counter] = new LevelFragment();
-        fragments[counter].setArguments(args);
-        counter++;
-
-        args = new Bundle();
-        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[4]);
-
-        fragments[counter] = new LevelFragment();
-        fragments[counter].setArguments(args);
-
-        adapter = new BasePagerAdapter(getSupportFragmentManager(), fragments);
+        adapter = new BasePagerAdapter(getSupportFragmentManager(), getFragments());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(adapter);
         viewPager.setPageTransformer(false, this);
@@ -144,10 +107,66 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
     }
 
+    private BaseFragment[] getFragments() {
+        LevelFragment[] fragments = new LevelFragment[isDecember ? 5 : 4];
+
+        int counter = 0;
+
+        if (isDecember) {
+            Bundle args = new Bundle();
+            args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[0]);
+
+            fragments[counter] = new LevelFragment();
+            fragments[counter].setArguments(args);
+            counter++;
+        }
+
+        Bundle args = new Bundle();
+        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[1]);
+
+        fragments[counter] = new LevelFragment();
+        fragments[counter].setArguments(args);
+        counter++;
+
+        args = new Bundle();
+        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[2]);
+
+        fragments[counter] = new LevelFragment();
+        fragments[counter].setArguments(args);
+        counter++;
+
+        args = new Bundle();
+        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[3]);
+
+        fragments[counter] = new LevelFragment();
+        fragments[counter].setArguments(args);
+        counter++;
+
+        args = new Bundle();
+        args.putParcelable(LevelFragment.EXTRA_LEVEL, PreferenceUtils.LEVELS[4]);
+
+        fragments[counter] = new LevelFragment();
+        fragments[counter].setArguments(args);
+
+        return fragments;
+    }
+
     public void startGame(int level) {
         Intent i = new Intent(MainActivity.this, FlappyActivity.class);
         i.putExtra(FlappyActivity.EXTRA_LEVEL, PreferenceUtils.LEVELS[level]);
         startActivity(i);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        currentPage = viewPager.getCurrentItem();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter = new BasePagerAdapter(getSupportFragmentManager(), getFragments());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(adapter);
+        viewPager.setPageTransformer(false, this);
+        viewPager.setCurrentItem(currentPage);
     }
 
     @Override
@@ -232,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         View score = page.findViewById(R.id.score);
 
         cutout.setTranslationX(-position * cutout.getWidth());
-        imageView.setTranslationX(-position * cutout.getWidth() / 2);
+        //imageView.setTranslationX(-position * cutout.getWidth() / 2);
         title.setTranslationX(-position * cutout.getWidth() / 4);
         score.setTranslationX(-position * cutout.getWidth() / 3);
     }

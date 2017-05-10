@@ -58,9 +58,7 @@ public class LevelFragment extends BaseFragment {
                     imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
                         public void onGlobalLayout() {
-                            imageView.setAlpha(0f);
                             imageView.setBackground(resource);
-                            imageView.animate().alpha(1).start();
                             imageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         }
                     });
@@ -68,7 +66,29 @@ public class LevelFragment extends BaseFragment {
             }
         });
 
+        imageView.onResume();
+
         return v;
+    }
+
+    @Override
+    public void onSelected() {
+        super.onSelected();
+        if (imageView != null)
+            imageView.onResume();
+    }
+
+    @Override
+    public void onDeselected() {
+        super.onDeselected();
+        if (imageView != null)
+            imageView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        imageView.onPause();
+        super.onDestroy();
     }
 
     @Override

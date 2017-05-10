@@ -5,16 +5,21 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.View;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.ViewTreeObserver;
 
 import java.util.Random;
 
-public class BgImageView extends View {
+public class BgImageView extends SurfaceView implements Runnable {
 
     private Bitmap background, cloud;
     private int lefty = 0, width, w, c1, c2, interval = 5;
     private Paint paint;
+    private Canvas canvas;
+    private SurfaceHolder surfaceHolder;
+    private volatile boolean isRunning;
+    private Thread thread;
 
     public BgImageView(Context context) {
         super(context);
@@ -33,11 +38,7 @@ public class BgImageView extends View {
 
     private void init() {
         paint = new Paint();
-        measure();
-    }
-
-    public void setImageBitmap(Bitmap bm) {
-        setBackground(bm);
+        surfaceHolder = getHolder();
     }
 
     public void setBackground(Bitmap background) {
@@ -93,26 +94,56 @@ public class BgImageView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        if (background == null) return;
+    public void run() {
+        while (isRunning) {
+            if (surfaceHolder.getSurface().isValid()) {
+                canvas = surfaceHolder.lockCanvas();
+                if (canvas == null) return;
 
-        if (lefty < 0) {
-            lefty = w;
-            Random r = new Random();
-            c2 = c1;
-            c1 = r.nextInt(width / 2);
+                if (lefty < 0 && width > 0) {
+                    lefty = w;
+                    Random r = new Random();
+                    c2 = c1;
+                    c1 = r.nextInt(width / 2);
+                }
+
+                if (background != null) {
+                    canvas.drawBitmap(background, lefty, 0, paint);
+                    canvas.drawBitmap(background, lefty - w, 0, paint);
+                }
+
+                if (cloud != null) {
+                    canvas.drawBitmap(cloud, lefty * 2, c1, paint);
+                    canvas.drawBitmap(cloud, (lefty - w) * 2, c2, paint);
+                    canvas.drawBitmap(cloud, (lefty - w / 3) * 2, c2 / 2, paint);
+                }
+
+                lefty -= interval;
+
+                surfaceHolder.unlockCanvasAndPost(canvas);
+            }
         }
+    }
 
-        canvas.drawBitmap(background, lefty, 0, paint);
-        canvas.drawBitmap(background, lefty - w, 0, paint);
+    public void onPause() {
+        if (thread == null)
+            return;
 
-        if (cloud != null) {
-            canvas.drawBitmap(cloud, lefty * 2, c1, paint);
-            canvas.drawBitmap(cloud, (lefty - w) * 2, c2, paint);
-            canvas.drawBitmap(cloud, (lefty - w / 3) * 2, c2 / 2, paint);
+        isRunning = false;
+        try {
+            thread.join();
+        } catch (InterruptedException ignored) {
         }
+        thread = null;
+    }
 
-        lefty -= interval;
-        postInvalidateDelayed(20);
+    public void onResume() {
+        if (thread != null)
+            onPause();
+
+        isRunning = true;
+        measure();
+        thread = new Thread(this);
+        thread.start();
     }
 }

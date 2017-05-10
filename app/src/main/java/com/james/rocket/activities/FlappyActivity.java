@@ -360,6 +360,20 @@ public class FlappyActivity extends AppCompatActivity implements GoogleApiClient
         return super.dispatchTouchEvent(event);
     }
 
+    @Override
+    public void onPause() {
+        if (bg != null)
+            bg.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if (bg != null)
+            bg.onResume();
+        super.onResume();
+    }
+
     public void onFailed(final int counter) {
         flappy.animate().cancel();
         flappy.setY(initial);
