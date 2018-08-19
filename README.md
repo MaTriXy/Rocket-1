@@ -1,4 +1,4 @@
-# Rocket
+Rocket is a very old game that I originally made when I was experimenting with view animation. It is currently being rebuilt to use the Canvas API because view animation is bad.
 
 ## License
 
